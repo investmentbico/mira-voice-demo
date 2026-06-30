@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mira — The AI receptionist that answers, books, and never sleeps</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: { brand: { 50:'#eef2ff',200:'#c7d2fe',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca' } },
+      fontFamily: { sans: ['Inter','system-ui','sans-serif'] }
+    }}
+  }
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Inter',sans-serif}
+  .gradient-hero{background:radial-gradient(1200px 600px at 50% -10%, rgba(99,102,241,.28), transparent 60%), #0b1020}
+  .glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(10px)}
+  .card-hover{transition:.2s}
+  .card-hover:hover{transform:translateY(-4px);box-shadow:0 20px 40px -20px rgba(99,102,241,.5)}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  .float{animation:float 4s ease-in-out infinite}
+  #wave span{display:inline-block;width:4px;border-radius:3px;height:8px;background:linear-gradient(#818cf8,#e879f9)}
+  #wave.playing span{animation:wv .8s ease-in-out infinite}
+  #wave.playing span:nth-child(2n){animation-duration:.6s}
+  #wave.playing span:nth-child(3n){animation-duration:1.05s}
+  #wave.playing span:nth-child(4n){animation-duration:.72s}
+  @keyframes wv{0%,100%{height:8px}50%{height:40px}}
+</style>
+</head>
+<body class="bg-[#0b1020] text-white antialiased">
+
+<!-- NAV -->
+<header class="sticky top-0 z-50 bg-[#0b1020]/80 backdrop-blur border-b border-white/10">
+  <nav class="max-w-6xl mx-auto px-5 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-2 font-extrabold text-lg">
+      <span class="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2"  y="9"  width="2.6" height="6"  rx="1.3" fill="white" opacity=".8"/>
+          <rect x="7"  y="5"  width="2.6" height="14" rx="1.3" fill="white"/>
+          <rect x="12" y="2"  width="2.6" height="20" rx="1.3" fill="white"/>
+          <rect x="17" y="6"  width="2.6" height="12" rx="1.3" fill="white" opacity=".85"/>
+          <rect x="22" y="9"  width="2.6" height="6"  rx="1.3" fill="white" opacity=".7"/>
+        </svg>
+      </span>
+      Mira
+    </div>
+    <div class="hidden md:flex items-center gap-7 text-sm text-white/70">
+      <a href="#how" class="hover:text-white">How it works</a>
+      <a href="#who" class="hover:text-white">Who it's for</a>
+      <a href="#features" class="hover:text-white">Features</a>
+      <a href="#pricing" class="hover:text-white">Pricing</a>
+      <a href="#faq" class="hover:text-white">FAQ</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <!-- language switcher (EN live · ES/PT phase 2) -->
+      <div class="hidden sm:flex items-center text-xs rounded-lg border border-white/15 overflow-hidden">
+        <button class="px-2.5 py-1.5 bg-brand-600 font-semibold">EN</button>
+        <button onclick="alert('Spanish version coming soon 🇪🇸 (phase 2)')" class="px-2.5 py-1.5 text-white/50 hover:text-white">ES</button>
+        <button onclick="alert('Portuguese version coming soon 🇧🇷 (phase 2)')" class="px-2.5 py-1.5 text-white/50 hover:text-white">PT</button>
+      </div>
+      <a href="dashboard.html" class="text-sm text-white/80 hover:text-white">Log in</a>
+      <a href="onboarding.html" class="text-sm font-semibold bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg">Start free</a>
+    </div>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="gradient-hero">
+  <div class="max-w-6xl mx-auto px-5 pt-20 pb-24 text-center">
+    <div class="inline-flex items-center gap-2 text-xs font-medium text-brand-200 bg-brand-500/10 border border-brand-500/30 rounded-full px-3 py-1 mb-6">
+      <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+      15-day free trial · no tech skills needed · set up in 10 minutes
+    </div>
+    <h1 class="text-4xl md:text-6xl font-extrabold tracking-tight leading-[1.05]">
+      Meet Mira, the AI receptionist<br>
+      that <span class="bg-gradient-to-r from-brand-400 to-fuchsia-400 bg-clip-text text-transparent">answers, books & sells</span><br>
+      24/7 — and sounds human.
+    </h1>
+    <p class="mt-6 text-lg text-white/70 max-w-2xl mx-auto">
+      Mira answers every call, text, and WhatsApp for your business. She quotes prices,
+      answers questions, and books appointments straight into your calendar —
+      so you never miss another customer. No code, no call center.
+    </p>
+    <div class="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
+      <a href="onboarding.html" class="bg-brand-600 hover:bg-brand-700 px-7 py-3.5 rounded-xl font-semibold text-base shadow-lg shadow-brand-600/30">
+        Build my receptionist free →
+      </a>
+      <button onclick="openDemo()" class="glass px-7 py-3.5 rounded-xl font-semibold text-base hover:bg-white/10">
+        📞 Hear a live demo call
+      </button>
+    </div>
+    <p class="mt-4 text-xs text-white/40">Card required, but you're not charged until day 15. Cancel anytime.</p>
+
+    <!-- mini live call card -->
+    <div class="mt-14 max-w-md mx-auto glass rounded-2xl p-5 text-left float">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center font-bold">M</div>
+        <div>
+          <div class="text-sm font-semibold">Mira · Bright Smile Dental</div>
+          <div class="text-xs text-green-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> On a call</div>
+        </div>
+      </div>
+      <div class="space-y-2 text-sm">
+        <div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[85%]">Thanks for calling Bright Smile! How can I help?</div>
+        <div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[85%] ml-auto">I'd like to book a cleaning this week.</div>
+        <div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[90%]">Of course! I have Thursday at 2pm or Friday at 10am. Which works best?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<section class="border-y border-white/10 bg-white/[.02]">
+  <div class="max-w-6xl mx-auto px-5 py-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-white/50 text-sm">
+    <span>✓ Never miss a call</span>
+    <span>✓ Answers in seconds</span>
+    <span>✓ Books into your calendar</span>
+    <span>✓ Phone + Text + WhatsApp</span>
+    <span>✓ Sounds genuinely human</span>
+  </div>
+</section>
+
+<!-- STATS / SOCIAL PROOF -->
+<section class="max-w-6xl mx-auto px-5 py-16">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div><div class="text-3xl md:text-4xl font-extrabold text-brand-400">24/7</div><div class="text-white/50 text-sm mt-1">Always answering</div></div>
+    <div><div class="text-3xl md:text-4xl font-extrabold text-brand-400">&lt;2s</div><div class="text-white/50 text-sm mt-1">Average pickup</div></div>
+    <div><div class="text-3xl md:text-4xl font-extrabold text-brand-400">35%</div><div class="text-white/50 text-sm mt-1">Calls missed without it</div></div>
+    <div><div class="text-3xl md:text-4xl font-extrabold text-brand-400">10 min</div><div class="text-white/50 text-sm mt-1">Setup time</div></div>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section id="who" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="text-center mb-12">
+    <h2 class="text-3xl md:text-4xl font-extrabold">Built for your kind of business</h2>
+    <p class="mt-3 text-white/60">Pick your category — Mira comes pre-loaded with the right script and answers.</p>
+  </div>
+  <div id="cat-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+  <p class="text-center text-white/40 text-sm mt-6">…and any other business that books customers over the phone.</p>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how" class="bg-white/[.02] border-y border-white/10">
+  <div class="max-w-6xl mx-auto px-5 py-20">
+    <div class="text-center mb-14">
+      <h2 class="text-3xl md:text-4xl font-extrabold">Live in 3 simple steps</h2>
+      <p class="mt-3 text-white/60">So easy it feels like cheating.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="glass rounded-2xl p-7">
+        <div class="text-brand-400 font-mono text-sm mb-3">STEP 1</div>
+        <div class="text-2xl mb-3">🏷️</div>
+        <h3 class="font-bold text-lg mb-2">Pick your business</h3>
+        <p class="text-white/60 text-sm">Choose your category and fill in your name, hours, services, and prices. We pre-fill the rest for you.</p>
+      </div>
+      <div class="glass rounded-2xl p-7">
+        <div class="text-brand-400 font-mono text-sm mb-3">STEP 2</div>
+        <div class="text-2xl mb-3">🔌</div>
+        <h3 class="font-bold text-lg mb-2">Connect calendar & channels</h3>
+        <p class="text-white/60 text-sm">One click links your calendar, your phone number, and WhatsApp. We handle the rest.</p>
+      </div>
+      <div class="glass rounded-2xl p-7">
+        <div class="text-brand-400 font-mono text-sm mb-3">STEP 3</div>
+        <div class="text-2xl mb-3">📞</div>
+        <h3 class="font-bold text-lg mb-2">Test & go live</h3>
+        <p class="text-white/60 text-sm">Hit "Call me now" and hear Mira instantly. Love it? Go live and she starts answering your customers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="text-center mb-14">
+    <h2 class="text-3xl md:text-4xl font-extrabold">Everything runs on autopilot</h2>
+  </div>
+  <div class="grid md:grid-cols-3 gap-5">
+    <div class="glass rounded-2xl p-6"><div class="text-2xl mb-3">🗓️</div><h3 class="font-semibold mb-1">Books itself</h3><p class="text-white/60 text-sm">Schedules, reschedules, and confirms appointments right in your calendar — no double-booking.</p></div>
+    <div class="glass rounded-2xl p-6"><div class="text-2xl mb-3">💬</div><h3 class="font-semibold mb-1">Phone, text & WhatsApp</h3><p class="text-white/60 text-sm">One brain answering across every channel at the same time.</p></div>
+    <div class="glass rounded-2xl p-6"><div class="text-2xl mb-3">💰</div><h3 class="font-semibold mb-1">Quotes prices & info</h3><p class="text-white/60 text-sm">Answers questions about services, pricing, address, and hours — accurately, every time.</p></div>
+    <div class="glass rounded-2xl p-6"><div class="text-2xl mb-3">✍️</div><h3 class="font-semibold mb-1">Editable script</h3><p class="text-white/60 text-sm">Start from a proven template and tweak how she talks whenever you want.</p></div>
+    <div class="glass rounded-2xl p-6"><div class="text-2xl mb-3">🙋</div><h3 class="font-semibold mb-1">Hands off to a human</h3><p class="text-white/60 text-sm">Tricky call? She transfers it straight to you or your team.</p></div>
+    <div class="glass rounded-2xl p-6"><div class="text-2xl mb-3">📊</div><h3 class="font-semibold mb-1">Recap of every call</h3><p class="text-white/60 text-sm">Recording, transcript, and summary texted to you. Nothing slips through.</p></div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="bg-white/[.02] border-y border-white/10">
+  <div class="max-w-6xl mx-auto px-5 py-20">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-3">Loved by busy owners</h2>
+    <p class="text-center text-white/60 mb-12">Businesses that stopped letting the phone ring out.</p>
+    <div class="grid md:grid-cols-3 gap-5">
+      <div class="glass rounded-2xl p-6">
+        <div class="text-amber-400 mb-3">★★★★★</div>
+        <p class="text-white/80 text-sm">"Mira books appointments while I'm with a client in the chair. We stopped losing after-hours calls completely — paid for itself in week one."</p>
+        <div class="flex items-center gap-3 mt-5">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center font-bold text-sm">JC</div>
+          <div><div class="text-sm font-semibold">Jessica Carter</div><div class="text-xs text-white/40">Owner · Carter Hair Studio</div></div>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="text-amber-400 mb-3">★★★★★</div>
+        <p class="text-white/80 text-sm">"Customers genuinely think it's a real receptionist. It quotes our service prices perfectly and never puts anyone on hold."</p>
+        <div class="flex items-center gap-3 mt-5">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center font-bold text-sm">MR</div>
+          <div><div class="text-sm font-semibold">Mike Rivera</div><div class="text-xs text-white/40">Owner · Rivera Auto Repair</div></div>
+        </div>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <div class="text-amber-400 mb-3">★★★★★</div>
+        <p class="text-white/80 text-sm">"Set it up myself in 10 minutes, no tech help. Our no-show rate dropped because Mira texts reminders automatically."</p>
+        <div class="flex items-center gap-3 mt-5">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center font-bold text-sm">DK</div>
+          <div><div class="text-sm font-semibold">Dr. Dana Kim</div><div class="text-xs text-white/40">Bright Smile Dental</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRY -->
+<section id="try" class="bg-gradient-to-b from-brand-600/10 to-transparent border-y border-white/10">
+  <div class="max-w-3xl mx-auto px-5 py-20 text-center">
+    <h2 class="text-3xl md:text-4xl font-extrabold">Hear it for yourself</h2>
+    <p class="mt-3 text-white/60">Drop your number and Mira will call you right now. Free.</p>
+    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+      <input type="tel" placeholder="(555) 000-0000" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3.5 outline-none focus:border-brand-500">
+      <button onclick="openDemo()" class="bg-brand-600 hover:bg-brand-700 px-6 py-3.5 rounded-xl font-semibold whitespace-nowrap">📞 Call me now</button>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="max-w-6xl mx-auto px-5 py-20">
+  <div class="text-center mb-14">
+    <h2 class="text-3xl md:text-4xl font-extrabold">Simple, honest pricing</h2>
+    <p class="mt-3 text-white/60">15-day free trial. You're not charged until day 15.</p>
+  </div>
+  <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+    <!-- Starter -->
+    <div class="glass rounded-2xl p-7 card-hover">
+      <div class="text-sm font-semibold text-white/60">Starter</div>
+      <div class="mt-3 text-4xl font-extrabold">$249<span class="text-base font-medium text-white/50">/mo</span></div>
+      <p class="text-white/50 text-sm mt-2">To stop missing customers, today.</p>
+      <ul class="mt-6 space-y-2.5 text-sm text-white/70">
+        <li>✓ 1 phone number</li>
+        <li>✓ Calls + Text + WhatsApp</li>
+        <li>✓ Calendar booking</li>
+        <li>✓ Up to 500 minutes/mo</li>
+        <li>✓ Call summaries</li>
+      </ul>
+      <a href="onboarding.html" class="mt-7 block text-center bg-white/10 hover:bg-white/15 py-3 rounded-xl font-semibold">Start free</a>
+    </div>
+    <!-- Pro (highlight) -->
+    <div class="rounded-2xl p-7 card-hover bg-gradient-to-b from-brand-600/30 to-brand-600/5 border-2 border-brand-500 relative">
+      <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-500 text-xs font-bold px-3 py-1 rounded-full">MOST POPULAR</div>
+      <div class="text-sm font-semibold text-brand-200">Pro</div>
+      <div class="mt-3 text-4xl font-extrabold">$499<span class="text-base font-medium text-white/50">/mo</span></div>
+      <p class="text-white/50 text-sm mt-2">For businesses with steady call volume.</p>
+      <ul class="mt-6 space-y-2.5 text-sm text-white/80">
+        <li>✓ Everything in Starter</li>
+        <li>✓ Up to 2,000 minutes/mo</li>
+        <li>✓ Multiple calendars / locations</li>
+        <li>✓ Live transfer to a human</li>
+        <li>✓ Premium custom voice</li>
+      </ul>
+      <a href="onboarding.html" class="mt-7 block text-center bg-brand-600 hover:bg-brand-700 py-3 rounded-xl font-semibold">Start free</a>
+    </div>
+    <!-- Enterprise -->
+    <div class="glass rounded-2xl p-7 card-hover">
+      <div class="text-sm font-semibold text-white/60">Enterprise</div>
+      <div class="mt-3 text-4xl font-extrabold">Custom</div>
+      <p class="text-white/50 text-sm mt-2">Multi-location, high volume, big teams.</p>
+      <ul class="mt-6 space-y-2.5 text-sm text-white/70">
+        <li>✓ Unlimited minutes</li>
+        <li>✓ Multiple numbers & teams</li>
+        <li>✓ Custom integrations (CRM)</li>
+        <li>✓ Dedicated account manager</li>
+      </ul>
+      <a href="#" class="mt-7 block text-center bg-white/10 hover:bg-white/15 py-3 rounded-xl font-semibold">Talk to us</a>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="bg-white/[.02] border-y border-white/10">
+  <div class="max-w-3xl mx-auto px-5 py-20">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-10">Questions, answered</h2>
+    <div id="faq-list" class="space-y-3"></div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="max-w-6xl mx-auto px-5 pb-24">
+  <div class="rounded-3xl bg-gradient-to-r from-brand-700 to-fuchsia-700 p-10 md:p-14 text-center">
+    <h2 class="text-3xl md:text-4xl font-extrabold">Your receptionist can start today</h2>
+    <p class="mt-3 text-white/80 max-w-xl mx-auto">In 10 minutes you'll have a receptionist who never sleeps, never calls in sick, and never misses a customer.</p>
+    <a href="onboarding.html" class="mt-7 inline-block bg-white text-brand-700 px-8 py-3.5 rounded-xl font-bold hover:bg-white/90">Build my receptionist free →</a>
+  </div>
+</section>
+
+<!-- DEMO CALL MODAL -->
+<div id="demoModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+  <div class="glass rounded-2xl max-w-md w-full p-6 relative">
+    <button onclick="closeDemo()" class="absolute top-4 right-4 text-white/50 hover:text-white text-lg">✕</button>
+    <div class="flex items-center gap-3 mb-5">
+      <div class="w-11 h-11 rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center font-bold">M</div>
+      <div>
+        <div class="font-semibold">Mira · Bright Smile Dental</div>
+        <div id="demoStatus" class="text-xs text-green-400 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> Live demo call</div>
+      </div>
+    </div>
+    <div id="wave" class="flex items-end justify-center gap-1.5 h-12 mb-5">
+      <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+    <div id="demoCaptions" class="space-y-2 text-sm max-h-56 overflow-y-auto"></div>
+    <button id="demoPlayBtn" onclick="playDemo()" class="w-full mt-5 bg-brand-600 hover:bg-brand-700 py-3 rounded-xl font-semibold">▶ Play the call</button>
+    <p class="text-center text-xs text-white/40 mt-2">Plays out loud in your browser · turn sound on 🔊</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/10">
+  <div class="max-w-6xl mx-auto px-5 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/40">
+    <div>© 2026 Mira · All rights reserved</div>
+    <div class="flex gap-6">
+      <a href="privacy-policy.html" class="hover:text-white">Privacy</a>
+      <a href="sms-terms.html" class="hover:text-white">SMS Terms</a>
+      <a href="#" class="hover:text-white">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const cats = [
+    {i:'🦷',n:'Dental / Clinics'},
+    {i:'💈',n:'Barbershops'},
+    {i:'💇',n:'Hair Salons'},
+    {i:'💅',n:'Beauty / Spa'},
+    {i:'🔧',n:'Auto Repair'},
+    {i:'🩺',n:'Medical Offices'},
+    {i:'🐾',n:'Pet / Vet'},
+    {i:'🍝',n:'Restaurants'},
+    {i:'🏋️',n:'Gyms / Studios'},
+    {i:'🧹',n:'Cleaning / Home Services'},
+    {i:'⚖️',n:'Law / Accounting'},
+    {i:'🏠',n:'Real Estate'},
+  ];
+  document.getElementById('cat-grid').innerHTML = cats.map(c=>`
+    <a href="onboarding.html" class="glass rounded-2xl p-5 card-hover text-center block">
+      <div class="text-3xl mb-2">${c.i}</div>
+      <div class="text-sm font-medium text-white/80">${c.n}</div>
+    </a>`).join('');
+
+  const faqs = [
+    ['Does it really sound human?','Yes. Mira uses the latest natural voices and responds in under two seconds, so callers feel like they\'re talking to a real, friendly front-desk person — not a robot menu.'],
+    ['Can I keep my current phone number?','Absolutely. You can forward your existing number to Mira, or get a brand-new local number in seconds. Your choice during setup.'],
+    ['What happens to complex calls?','Mira handles bookings, prices, and FAQs on her own. For anything tricky or urgent, she politely transfers the call straight to you or your team.'],
+    ['Do I need to be technical?','Not at all. The setup is 6 simple steps with everything pre-filled for your business type. If you can fill out a form, you can launch Mira in about 10 minutes.'],
+    ['When am I charged?','Never during your 15-day free trial. We only charge your card on day 15, and you can cancel anytime before then and pay nothing.'],
+    ['Which calendars does it work with?','Google Calendar, Calendly, and Cal.com — connected in one click. Don\'t have one? We\'ll set up a free calendar for you.'],
+  ];
+  document.getElementById('faq-list').innerHTML = faqs.map(f=>`
+    <details class="glass rounded-xl px-5 py-4 group">
+      <summary class="flex items-center justify-between cursor-pointer font-semibold list-none">
+        ${f[0]}<span class="text-brand-400 group-open:rotate-45 transition">+</span>
+      </summary>
+      <p class="text-white/60 text-sm mt-3">${f[1]}</p>
+    </details>`).join('');
+
+  // ---- Live demo call (speaks in the browser, no audio file needed) ----
+  const demoScript = [
+    {who:'mira',   text:"Thanks for calling Bright Smile Dental, this is Mira. How can I help you today?"},
+    {who:'caller', text:"Hi, I'd like to book a teeth cleaning sometime this week."},
+    {who:'mira',   text:"I'd be happy to help with that. I have Thursday at 2 PM, or Friday at 10 AM. Which works better for you?"},
+    {who:'caller', text:"Friday at 10 works great."},
+    {who:'mira',   text:"Perfect. Can I get your name and a good callback number?"},
+    {who:'caller', text:"Sure, it's Daniel, five five five, zero one four two."},
+    {who:'mira',   text:"Thank you, Daniel. You're all booked for Friday at 10 AM. We'll text you a reminder. Have a great day!"},
+  ];
+  let demoI = 0, demoVoices = [];
+  function loadVoices(){ demoVoices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : []; }
+  if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
+  function chooseVoice(female){
+    const en = demoVoices.filter(v=>/^en/i.test(v.lang));
+    const f = en.find(v=>/female|samantha|victoria|zira|karen|moira|google us english|aria/i.test(v.name));
+    const m = en.find(v=>/male|david|daniel|alex|fred|google uk english male|guy/i.test(v.name));
+    return female ? (f || en[0]) : (m || en.find(v=>v!==(f||en[0])) || en[0]);
+  }
+  function openDemo(){
+    const m=document.getElementById('demoModal'); m.classList.remove('hidden'); m.classList.add('flex');
+  }
+  function closeDemo(){
+    if('speechSynthesis' in window) speechSynthesis.cancel();
+    document.getElementById('wave').classList.remove('playing');
+    const m=document.getElementById('demoModal'); m.classList.add('hidden'); m.classList.remove('flex');
+  }
+  function playDemo(){
+    demoI = 0;
+    document.getElementById('demoCaptions').innerHTML = '';
+    document.getElementById('demoStatus').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> On the call…';
+    const btn=document.getElementById('demoPlayBtn'); btn.disabled=true; btn.classList.add('opacity-60'); btn.textContent='● On the call…';
+    speakNext();
+  }
+  function speakNext(){
+    const wave=document.getElementById('wave'), btn=document.getElementById('demoPlayBtn');
+    if(demoI>=demoScript.length){
+      wave.classList.remove('playing');
+      document.getElementById('demoStatus').innerHTML='Call ended · appointment booked ✓';
+      btn.disabled=false; btn.classList.remove('opacity-60'); btn.textContent='▶ Replay the call';
+      return;
+    }
+    const line=demoScript[demoI], isMira=line.who==='mira';
+    const cap=document.getElementById('demoCaptions');
+    cap.insertAdjacentHTML('beforeend', isMira
+      ? `<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[88%]"><b class="text-brand-400">Mira:</b> ${line.text}</div>`
+      : `<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[88%] ml-auto"><b class="text-white/70">Caller:</b> ${line.text}</div>`);
+    cap.scrollTop=cap.scrollHeight;
+    wave.classList.add('playing');
+    if('speechSynthesis' in window){
+      const u=new SpeechSynthesisUtterance(line.text);
+      const v=chooseVoice(isMira); if(v) u.voice=v;
+      u.rate=1.02; u.pitch=isMira?1.1:0.9;
+      u.onend=()=>{ demoI++; setTimeout(speakNext,350); };
+      u.onerror=()=>{ demoI++; setTimeout(speakNext,350); };
+      speechSynthesis.speak(u);
+    } else {
+      setTimeout(()=>{ demoI++; speakNext(); }, 1900);
+    }
+  }
+</script>
+</body>
+</html>

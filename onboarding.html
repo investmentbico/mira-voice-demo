@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Set up your receptionist · Mira</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config={theme:{extend:{colors:{brand:{50:'#eef2ff',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca'}}}}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  body{font-family:'Inter',sans-serif}
+  .gradient{background:radial-gradient(900px 500px at 50% -10%, rgba(99,102,241,.2), transparent 60%), #0b1020}
+  .glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+  .opt{cursor:pointer;transition:.15s}
+  .opt:hover{border-color:#6366f1;background:rgba(99,102,241,.08)}
+  .opt.sel{border-color:#6366f1;background:rgba(99,102,241,.15);box-shadow:0 0 0 1px #6366f1}
+  input,textarea,select{outline:none}
+  .step{display:none}.step.active{display:block;animation:fade .3s}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+</style>
+</head>
+<body class="gradient text-white min-h-screen">
+
+<header class="border-b border-white/10 sticky top-0 bg-[#0b1020]/90 backdrop-blur z-40">
+  <div class="max-w-3xl mx-auto px-5 h-14 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-2 font-extrabold">
+      <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="2" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".8"/>
+          <rect x="7" y="5" width="2.6" height="14" rx="1.3" fill="white"/>
+          <rect x="12" y="2" width="2.6" height="20" rx="1.3" fill="white"/>
+          <rect x="17" y="6" width="2.6" height="12" rx="1.3" fill="white" opacity=".85"/>
+          <rect x="22" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".7"/>
+        </svg>
+      </span> Mira
+    </a>
+    <div class="text-sm text-white/50">Need help? <a href="#" class="text-brand-400">Chat with us</a></div>
+  </div>
+  <div class="h-1 bg-white/10"><div id="bar" class="h-1 bg-brand-500 transition-all" style="width:16%"></div></div>
+</header>
+
+<main class="max-w-3xl mx-auto px-5 py-10 pb-32">
+
+  <div class="text-center mb-8">
+    <div class="text-sm text-brand-400 font-semibold">Step <span id="stepNum">1</span> of 6</div>
+  </div>
+
+  <!-- STEP 1: CATEGORY -->
+  <section class="step active" data-step="1">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">What kind of business do you run?</h1>
+    <p class="text-center text-white/60 mt-2">We'll set everything up for your type of front desk.</p>
+    <div id="catGrid" class="grid grid-cols-2 md:grid-cols-3 gap-3 mt-8"></div>
+  </section>
+
+  <!-- STEP 2: DETAILS -->
+  <section class="step" data-step="2">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Tell Mira about your business</h1>
+    <p class="text-center text-white/60 mt-2">She'll use this to answer your customers.</p>
+    <div class="mt-8 space-y-4">
+      <div><label class="text-sm text-white/70">Business name</label>
+        <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="e.g. Bright Smile Dental"></div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <div><label class="text-sm text-white/70">Current phone</label>
+          <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="(555) 000-0000"></div>
+        <div><label class="text-sm text-white/70">Address</label>
+          <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Street, city, state"></div>
+      </div>
+      <div><label class="text-sm text-white/70">Business hours</label>
+        <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Mon–Fri, 9am–6pm"></div>
+      <div>
+        <label class="text-sm text-white/70">Services & prices</label>
+        <p class="text-xs text-white/40 mb-1">One per line. Mira quotes these to your customers.</p>
+        <textarea rows="4" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Cleaning — $120&#10;Whitening — $450&#10;New patient exam — free"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3: VOICE + SCRIPT -->
+  <section class="step" data-step="3">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Choose her voice & style</h1>
+    <p class="text-center text-white/60 mt-2">We've loaded a ready-made script. Edit it if you like.</p>
+
+    <div class="mt-8">
+      <div class="text-sm text-white/70 mb-2">Voice</div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div class="opt glass rounded-xl p-3 text-center sel" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Mira</div><div class="text-xs text-white/40">Warm female</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+      </div>
+    </div>
+
+    <div class="mt-7">
+      <div class="flex items-center justify-between mb-2">
+        <div class="text-sm text-white/70">Receptionist script</div>
+        <span class="text-xs text-green-400">✓ Dental template loaded</span>
+      </div>
+      <textarea rows="8" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-sm leading-relaxed">You are the receptionist for {BUSINESS}. Be warm, friendly, and brief.
+1. Greet the caller and say the business name.
+2. Ask how you can help.
+3. To book: ask which service, offer 2 open times, and confirm.
+4. If asked about price, quote from the services list.
+5. For anything complex or urgent, offer to transfer to a team member.
+Always confirm the caller's name and number before ending the call.</textarea>
+      <div class="flex gap-2 mt-2 text-xs">
+        <button class="glass px-3 py-1.5 rounded-lg">✨ More formal</button>
+        <button class="glass px-3 py-1.5 rounded-lg">😊 More casual</button>
+        <button class="glass px-3 py-1.5 rounded-lg">➕ Add an FAQ</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4: CALENDAR -->
+  <section class="step" data-step="4">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Connect your calendar</h1>
+    <p class="text-center text-white/60 mt-2">So Mira books appointments without conflicts.</p>
+    <div class="mt-8 space-y-3">
+      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="connect(this)">
+        <div class="flex items-center gap-3"><span class="text-2xl">📅</span><div><div class="font-semibold">Google Calendar</div><div class="text-xs text-white/40">Most popular · connects in one click</div></div></div>
+        <span class="text-sm bg-brand-600 px-4 py-2 rounded-lg">Connect</span>
+      </div>
+      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="connect(this)">
+        <div class="flex items-center gap-3"><span class="text-2xl">🗓️</span><div><div class="font-semibold">Calendly / Cal.com</div><div class="text-xs text-white/40">Free · included in your plan</div></div></div>
+        <span class="text-sm bg-brand-600 px-4 py-2 rounded-lg">Connect</span>
+      </div>
+      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="connect(this)">
+        <div class="flex items-center gap-3"><span class="text-2xl">🆕</span><div><div class="font-semibold">I don't have a calendar yet</div><div class="text-xs text-white/40">We'll create one for you, free</div></div></div>
+        <span class="text-sm bg-white/10 px-4 py-2 rounded-lg">Create one</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 5: CHANNELS -->
+  <section class="step" data-step="5">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Where should Mira answer?</h1>
+    <p class="text-center text-white/60 mt-2">Turn on the channels you use. You can change this later.</p>
+    <div class="mt-8 space-y-3">
+      <div class="opt glass rounded-xl p-4 flex items-center justify-between sel" onclick="toggleCh(this)">
+        <div class="flex items-center gap-3"><span class="text-2xl">📞</span><div><div class="font-semibold">Phone</div><div class="text-xs text-white/40">Get a new number OR forward your existing one</div></div></div>
+        <span class="check text-brand-400 text-xl">●</span>
+      </div>
+      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="toggleCh(this)">
+        <div class="flex items-center gap-3"><span class="text-2xl">💬</span><div><div class="font-semibold">WhatsApp</div><div class="text-xs text-white/40">Replies to messages and books over chat</div></div></div>
+        <span class="check text-white/20 text-xl">○</span>
+      </div>
+      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="toggleCh(this)">
+        <div class="flex items-center gap-3"><span class="text-2xl">✉️</span><div><div class="font-semibold">Text / SMS</div><div class="text-xs text-white/40">Confirms and reminds about appointments</div></div></div>
+        <span class="check text-white/20 text-xl">○</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 6: TEST + PAY -->
+  <section class="step" data-step="6">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Almost there — test Mira! 🎉</h1>
+    <p class="text-center text-white/60 mt-2">She'll call you right now. Love it? Start your 15 free days.</p>
+
+    <div class="mt-8 glass rounded-2xl p-6 text-center">
+      <div class="text-sm text-white/70 mb-3">Enter your cell and Mira calls in seconds:</div>
+      <div class="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto">
+        <input type="tel" placeholder="(555) 000-0000" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3">
+        <button onclick="alert('📞 Ringing... Mira is calling you! (demo)')" class="bg-brand-600 hover:bg-brand-700 px-5 py-3 rounded-xl font-semibold whitespace-nowrap">📞 Call me</button>
+      </div>
+    </div>
+
+    <div class="mt-8 glass rounded-2xl p-6">
+      <div class="flex items-center justify-between mb-4">
+        <div class="font-semibold">Activate — Starter plan</div>
+        <div class="text-right"><div class="text-2xl font-extrabold">$249<span class="text-sm text-white/50">/mo</span></div></div>
+      </div>
+      <div class="bg-green-500/10 border border-green-500/30 rounded-xl px-4 py-3 text-sm text-green-300 mb-4">
+        ✓ 15 days free · you're first charged on <b>July 15, 2026</b>. Cancel before then and pay nothing.
+      </div>
+      <div class="space-y-3">
+        <input class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Card number">
+        <div class="grid grid-cols-2 gap-3">
+          <input class="bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Expiry MM/YY">
+          <input class="bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="CVC">
+        </div>
+      </div>
+      <button onclick="alert('🎉 Activated! Mira is now live. (demo — Stripe goes here)')" class="w-full mt-4 bg-gradient-to-r from-brand-600 to-fuchsia-600 hover:opacity-90 py-3.5 rounded-xl font-bold">
+        Start my 15 free days →
+      </button>
+      <p class="text-center text-xs text-white/40 mt-3">🔒 Secure payment via Stripe · cancel anytime</p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="fixed bottom-0 inset-x-0 border-t border-white/10 bg-[#0b1020]/95 backdrop-blur">
+  <div class="max-w-3xl mx-auto px-5 h-20 flex items-center justify-between">
+    <button id="back" onclick="go(-1)" class="text-white/60 hover:text-white px-4 py-2 invisible">← Back</button>
+    <button id="next" onclick="go(1)" class="bg-brand-600 hover:bg-brand-700 px-8 py-3 rounded-xl font-semibold">Continue →</button>
+  </div>
+</footer>
+
+<script>
+  const cats=[['🦷','Dental / Clinic'],['💈','Barbershop'],['💇','Hair Salon'],['💅','Beauty / Spa'],['🔧','Auto Repair'],['🩺','Medical Office'],['🐾','Pet / Vet'],['🍝','Restaurant'],['🏋️','Gym / Studio'],['🧹','Cleaning / Home'],['⚖️','Law / Accounting'],['🏠','Real Estate']];
+  document.getElementById('catGrid').innerHTML=cats.map(c=>`
+    <div class="opt glass rounded-xl p-4 text-center" onclick="pickCat(this)">
+      <div class="text-3xl">${c[0]}</div><div class="text-sm mt-1 text-white/80">${c[1]}</div></div>`).join('');
+
+  let step=1; const total=6;
+  function render(){
+    document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));
+    document.getElementById('bar').style.width=(step/total*100)+'%';
+    document.getElementById('stepNum').textContent=step;
+    document.getElementById('back').classList.toggle('invisible',step===1);
+    document.getElementById('next').textContent = step===total ? 'Finish' : 'Continue →';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function go(d){ if(step===total&&d>0){alert('🎉 All set! (demo)');return;} step=Math.min(total,Math.max(1,step+d)); render(); }
+  function pickCat(el){document.querySelectorAll('#catGrid .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');setTimeout(()=>go(1),250);}
+  function pickVoice(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+  function connect(el){el.classList.add('sel');el.querySelector('span:last-child').textContent='✓ Connected';}
+  function toggleCh(el){const on=el.classList.toggle('sel');const c=el.querySelector('.check');c.textContent=on?'●':'○';c.className='check text-xl '+(on?'text-brand-400':'text-white/20');}
+</script>
+</body>
+</html>
