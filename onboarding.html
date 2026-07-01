@@ -59,6 +59,12 @@
     <h1 class="text-2xl md:text-3xl font-extrabold text-center">Tell Mira about your business</h1>
     <p class="text-center text-white/60 mt-2">She'll use this to answer your customers.</p>
     <div class="mt-8 space-y-4">
+      <div class="grid md:grid-cols-2 gap-4">
+        <div><label class="text-sm text-white/70">Your name</label>
+          <input id="ownerName" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="e.g. Dr. Dana Kim"></div>
+        <div><label class="text-sm text-white/70">Your email <span class="text-brand-400">*</span></label>
+          <input id="ownerEmail" type="email" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="you@business.com"></div>
+      </div>
       <div><label class="text-sm text-white/70">Business name</label>
         <input id="bizName" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="e.g. Bright Smile Dental"></div>
       <div class="grid md:grid-cols-2 gap-4">
@@ -191,11 +197,20 @@ Always confirm the caller's name and number before ending the call.</textarea>
 
     <div class="mt-8 glass rounded-2xl p-6 text-center">
       <div id="signupStatus" class="text-sm mb-3 text-white/70">Setting up your Mira…</div>
-      <div class="text-sm text-white/70 mb-3">Enter your cell (with country code) and Mira calls in seconds:</div>
-      <div class="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto">
+      <div class="text-sm text-white/70 mb-3">Confirm your cell — we text a 6-digit code, then Mira calls you:</div>
+      <div class="flex gap-3 max-w-sm mx-auto">
         <input id="testPhone" type="tel" placeholder="+1 (555) 000-0000" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3">
-        <button onclick="callMe()" class="bg-brand-600 hover:bg-brand-700 px-5 py-3 rounded-xl font-semibold whitespace-nowrap">📞 Call me</button>
+        <button id="btnSendCode" onclick="sendCode()" class="bg-white/10 hover:bg-white/15 px-4 py-3 rounded-xl font-semibold whitespace-nowrap">Send code</button>
       </div>
+      <div id="codeBox" class="hidden gap-3 max-w-sm mx-auto mt-3">
+        <input id="otpCode" inputmode="numeric" maxlength="6" placeholder="6-digit code" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-center tracking-[0.4em]">
+        <button onclick="verifyCode()" class="bg-white/10 hover:bg-white/15 px-4 py-3 rounded-xl font-semibold">Verify</button>
+      </div>
+      <label class="flex items-start gap-2 text-xs text-white/50 mt-3 text-left max-w-sm mx-auto">
+        <input id="smsConsent" type="checkbox" class="mt-0.5 shrink-0">
+        <span>I agree to receive account &amp; appointment text messages from Mira at this number. Msg &amp; data rates may apply. Reply STOP to unsubscribe, HELP for help.</span>
+      </label>
+      <button id="btnCallMe" onclick="callMe()" disabled class="mt-4 bg-brand-600 hover:bg-brand-700 px-6 py-3 rounded-xl font-semibold opacity-50 cursor-not-allowed">📞 Call me now</button>
     </div>
 
     <div class="mt-8 glass rounded-2xl p-6">
@@ -213,7 +228,11 @@ Always confirm the caller's name and number before ending the call.</textarea>
           <input class="bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="CVC">
         </div>
       </div>
-      <button onclick="alert('🎉 Activated! Mira is now live. (demo — Stripe goes here)')" class="w-full mt-4 bg-gradient-to-r from-brand-600 to-fuchsia-600 hover:opacity-90 py-3.5 rounded-xl font-bold">
+      <label class="flex items-start gap-2 text-xs text-white/50 mt-4 text-left">
+        <input id="agreeTerms" type="checkbox" class="mt-0.5 shrink-0">
+        <span>I agree to Mira's <a href="sms-terms.html" target="_blank" class="text-brand-400 underline">SMS Terms</a> and <a href="privacy-policy.html" target="_blank" class="text-brand-400 underline">Privacy Policy</a>, and I confirm I have consent to contact my own customers by call and text.</span>
+      </label>
+      <button onclick="activate()" class="w-full mt-3 bg-gradient-to-r from-brand-600 to-fuchsia-600 hover:opacity-90 py-3.5 rounded-xl font-bold">
         Start my 15 free days →
       </button>
       <p class="text-center text-xs text-white/40 mt-3">🔒 Secure payment via Stripe · cancel anytime</p>
@@ -280,7 +299,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
       realestate:{tools:[{n:'Follow Up Boss',s:'deep'},{n:'Calendly',s:'deep'},{n:'ShowingTime',s:'lite'}]}
     }
   };
-  let selectedCat='generic', selectedVoice='Savannah', createdAssistant=null, provisioning=false;
+  let selectedCat='generic', selectedVoice='Savannah', createdAssistant=null, provisioning=false, phoneVerified=false;
   function badge(s){
     return s==='deep' ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">⚡ Auto-sync</span>'
       : s==='calendar' ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300">Calendar sync</span>'
@@ -331,10 +350,13 @@ Always confirm the caller's name and number before ending the call.</textarea>
   }
   function gatherConfig(){
     const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
+    const chk=id=>{const e=document.getElementById(id);return e?e.checked:false;};
     return {category:selectedCat, agent_name:'Mira', language:'en',
+      owner_name:v('ownerName'), owner_email:v('ownerEmail'),
       name:v('bizName')||'My Test Business', address:v('bizAddress'),
       hours:v('bizHours')||'Mon–Fri 9am–6pm', voice:selectedVoice||'Savannah',
-      services:parseServices(v('bizServices'))};
+      services:parseServices(v('bizServices')),
+      phone:v('testPhone'), sms_consent:chk('smsConsent')};
   }
   async function provisionBusiness(){
     if(createdAssistant||provisioning) return;
@@ -353,6 +375,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
   async function callMe(){
     const to=(document.getElementById('testPhone')||{}).value, st=document.getElementById('signupStatus');
     if(!to){ alert('Enter your phone number first (e.g. +19545550142).'); return; }
+    if(!phoneVerified){ alert('Please verify your number with the texted code first.'); return; }
     if(!createdAssistant){ await provisionBusiness(); }
     st.innerHTML='<span class="text-white/50">📞 Calling '+to+'…</span>';
     try{
@@ -360,6 +383,35 @@ Always confirm the caller's name and number before ending the call.</textarea>
       const d=await r.json();
       st.innerHTML = d.ok ? '<span class="text-green-400">📞 Mira is calling you now — pick up!</span>' : '<span class="text-amber-300">'+(d.error||'Could not place call')+'</span>';
     }catch(e){ st.innerHTML='<span class="text-amber-300">Live calling works on the local server (localhost:8788).</span>'; }
+  }
+  async function sendCode(){
+    const to=(document.getElementById('testPhone')||{}).value, st=document.getElementById('signupStatus');
+    if(!to){ alert('Enter your phone number first (with country code, e.g. +19545550142).'); return; }
+    if(!document.getElementById('smsConsent').checked){ alert('Please check the SMS consent box first — it\'s required by law (TCPA).'); return; }
+    st.innerHTML='<span class="text-white/50">Texting you a code…</span>';
+    try{
+      const r=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to})});
+      const d=await r.json();
+      if(d.ok){ const cb=document.getElementById('codeBox'); cb.classList.remove('hidden'); cb.classList.add('flex'); st.innerHTML='<span class="text-green-400">✓ Code sent — enter the 6 digits below.</span>'; }
+      else st.innerHTML='<span class="text-amber-300">'+(d.error||'Could not send code')+'</span>';
+    }catch(e){ st.innerHTML='<span class="text-amber-300">Verification runs on the local server (localhost:8788).</span>'; }
+  }
+  async function verifyCode(){
+    const to=(document.getElementById('testPhone')||{}).value, code=(document.getElementById('otpCode')||{}).value, st=document.getElementById('signupStatus');
+    if(!code){ alert('Enter the code we texted you.'); return; }
+    st.innerHTML='<span class="text-white/50">Checking…</span>';
+    try{
+      const r=await fetch('/api/verify-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to,code})});
+      const d=await r.json();
+      if(d.verified){ phoneVerified=true; const b=document.getElementById('btnCallMe'); b.disabled=false; b.classList.remove('opacity-50','cursor-not-allowed'); st.innerHTML='<span class="text-green-400">✓ Number verified! Tap “Call me now”.</span>'; }
+      else st.innerHTML='<span class="text-amber-300">'+(d.error||'Invalid code')+'</span>';
+    }catch(e){ st.innerHTML='<span class="text-amber-300">Verification runs on the local server.</span>'; }
+  }
+  function activate(){
+    const email=(document.getElementById('ownerEmail')||{}).value;
+    if(!email){ alert('Please add your email in step 2 first — we need it for your account.'); return; }
+    if(!document.getElementById('agreeTerms').checked){ alert('Please accept the Terms & Privacy to continue.'); return; }
+    alert('🎉 Activated! Mira is now live for your business. (demo — Stripe billing goes here)');
   }
 </script>
 </body>
