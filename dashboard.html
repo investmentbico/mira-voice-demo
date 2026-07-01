@@ -13,11 +13,15 @@
   body{font-family:'Inter',sans-serif}
   .gradient{background:radial-gradient(900px 500px at 80% -10%, rgba(99,102,241,.15), transparent 60%), #0b1020}
   .glass{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
-  .navlink{transition:.15s}
+  .navlink{transition:.15s;cursor:pointer}
   .navlink:hover{background:rgba(255,255,255,.06)}
   .navlink.active{background:rgba(99,102,241,.18);color:#c7d2fe}
   .row:hover{background:rgba(255,255,255,.04)}
   .badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px}
+  .view{display:none}.view.active{display:block;animation:fade .25s}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .opt{cursor:pointer;transition:.15s}.opt:hover{border-color:#6366f1}.opt.sel{border-color:#6366f1;background:rgba(99,102,241,.15)}
+  input,textarea,select{outline:none}
 </style>
 </head>
 <body class="gradient text-white min-h-screen">
@@ -27,110 +31,185 @@
   <aside class="hidden md:flex flex-col w-60 border-r border-white/10 p-4 shrink-0">
     <a href="index.html" class="flex items-center gap-2 font-extrabold text-lg px-2 mb-6">
       <span class="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <rect x="2" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".8"/>
-          <rect x="7" y="5" width="2.6" height="14" rx="1.3" fill="white"/>
-          <rect x="12" y="2" width="2.6" height="20" rx="1.3" fill="white"/>
-          <rect x="17" y="6" width="2.6" height="12" rx="1.3" fill="white" opacity=".85"/>
-          <rect x="22" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".7"/>
-        </svg>
+        <svg width="16" height="16" viewBox="0 0 24 24"><rect x="2" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".8"/><rect x="7" y="5" width="2.6" height="14" rx="1.3" fill="white"/><rect x="12" y="2" width="2.6" height="20" rx="1.3" fill="white"/><rect x="17" y="6" width="2.6" height="12" rx="1.3" fill="white" opacity=".85"/><rect x="22" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".7"/></svg>
       </span> Mira
     </a>
     <nav class="space-y-1 text-sm">
-      <a class="navlink active flex items-center gap-3 px-3 py-2.5 rounded-lg">📊 <span>Dashboard</span></a>
-      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70">📞 <span>Calls</span></a>
-      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70">🗓️ <span>Appointments</span></a>
-      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70">👥 <span>Customers</span></a>
-      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70">✍️ <span>Script & Voice</span></a>
-      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70">🔌 <span>Integrations</span></a>
-      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70">⚙️ <span>Settings</span></a>
+      <a class="navlink active flex items-center gap-3 px-3 py-2.5 rounded-lg" data-view="dashboard" onclick="showView('dashboard')">📊 <span>Dashboard</span></a>
+      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70" data-view="calls" onclick="showView('calls')">📞 <span>Calls</span></a>
+      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70" data-view="appointments" onclick="showView('appointments')">🗓️ <span>Appointments</span></a>
+      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70" data-view="customers" onclick="showView('customers')">👥 <span>Customers</span></a>
+      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70" data-view="script" onclick="showView('script')">✍️ <span>Script &amp; Voice</span></a>
+      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70" data-view="integrations" onclick="showView('integrations')">🔌 <span>Integrations</span></a>
+      <a class="navlink flex items-center gap-3 px-3 py-2.5 rounded-lg text-white/70" data-view="settings" onclick="showView('settings')">⚙️ <span>Settings</span></a>
     </nav>
     <div class="mt-auto glass rounded-xl p-3 text-xs">
       <div class="font-semibold text-brand-200">Free trial</div>
       <div class="text-white/50 mt-1">11 days left · ends Jul 15</div>
-      <button class="mt-2 w-full bg-brand-600 hover:bg-brand-700 py-2 rounded-lg font-semibold">Upgrade now</button>
+      <button onclick="openUpgrade()" class="mt-2 w-full bg-brand-600 hover:bg-brand-700 py-2 rounded-lg font-semibold">Upgrade now</button>
     </div>
   </aside>
 
   <!-- MAIN -->
   <main class="flex-1 min-w-0">
-    <!-- topbar -->
     <header class="border-b border-white/10 px-5 md:px-8 h-16 flex items-center justify-between sticky top-0 bg-[#0b1020]/85 backdrop-blur z-30">
       <div>
         <div class="font-bold">Bright Smile Dental</div>
-        <div class="text-xs text-white/40">Monday, June 30, 2026</div>
+        <div id="crumb" class="text-xs text-white/40">Dashboard</div>
       </div>
       <div class="flex items-center gap-3">
         <span class="badge bg-green-500/15 text-green-400 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> Mira is live</span>
-        <button onclick="document.getElementById('testModal').classList.remove('hidden');document.getElementById('testModal').classList.add('flex')" class="text-sm bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg font-semibold">📞 Test call</button>
+        <button onclick="openTest()" class="text-sm bg-brand-600 hover:bg-brand-700 px-4 py-2 rounded-lg font-semibold">📞 Test call</button>
         <div class="w-9 h-9 rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 grid place-items-center font-bold text-sm">DK</div>
       </div>
     </header>
 
-    <div class="p-5 md:p-8 space-y-6">
+    <div class="p-5 md:p-8">
 
-      <!-- KPI CARDS -->
-      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="glass rounded-2xl p-5">
-          <div class="text-white/50 text-sm">Calls answered today</div>
-          <div class="text-3xl font-extrabold mt-1">14</div>
-          <div class="text-xs text-green-400 mt-1">▲ 22% vs yesterday</div>
-        </div>
-        <div class="glass rounded-2xl p-5">
-          <div class="text-white/50 text-sm">Appointments booked</div>
-          <div class="text-3xl font-extrabold mt-1">6</div>
-          <div class="text-xs text-green-400 mt-1">▲ 2 this morning</div>
-        </div>
-        <div class="glass rounded-2xl p-5">
-          <div class="text-white/50 text-sm">Missed calls</div>
-          <div class="text-3xl font-extrabold mt-1">0</div>
-          <div class="text-xs text-white/40 mt-1">Mira caught them all</div>
-        </div>
-        <div class="glass rounded-2xl p-5">
-          <div class="text-white/50 text-sm">Minutes used</div>
-          <div class="text-3xl font-extrabold mt-1">182<span class="text-base text-white/40">/500</span></div>
-          <div class="h-1.5 bg-white/10 rounded-full mt-2"><div class="h-1.5 bg-brand-500 rounded-full" style="width:36%"></div></div>
-        </div>
-      </section>
-
-      <div class="grid lg:grid-cols-3 gap-6">
-
-        <!-- RECENT CALLS -->
-        <section class="lg:col-span-2 glass rounded-2xl p-5">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="font-bold">Recent calls</h2>
-            <a class="text-sm text-brand-400 hover:text-brand-300 cursor-pointer">View all →</a>
-          </div>
-          <div class="overflow-hidden rounded-xl border border-white/10">
-            <table class="w-full text-sm">
-              <thead class="bg-white/5 text-white/50 text-xs uppercase">
-                <tr><th class="text-left font-medium px-4 py-2.5">Caller</th><th class="text-left font-medium px-4 py-2.5 hidden sm:table-cell">Time</th><th class="text-left font-medium px-4 py-2.5">Outcome</th><th class="text-left font-medium px-4 py-2.5 hidden sm:table-cell">Length</th><th></th></tr>
-              </thead>
-              <tbody id="callRows" class="divide-y divide-white/5"></tbody>
-            </table>
-          </div>
+      <!-- ============ DASHBOARD ============ -->
+      <div class="view active" id="view-dashboard">
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="glass rounded-2xl p-5"><div class="text-white/50 text-sm">Calls answered today</div><div class="text-3xl font-extrabold mt-1">14</div><div class="text-xs text-green-400 mt-1">▲ 22% vs yesterday</div></div>
+          <div class="glass rounded-2xl p-5"><div class="text-white/50 text-sm">Appointments booked</div><div class="text-3xl font-extrabold mt-1">6</div><div class="text-xs text-green-400 mt-1">▲ 2 this morning</div></div>
+          <div class="glass rounded-2xl p-5"><div class="text-white/50 text-sm">Missed calls</div><div class="text-3xl font-extrabold mt-1">0</div><div class="text-xs text-white/40 mt-1">Mira caught them all</div></div>
+          <div class="glass rounded-2xl p-5"><div class="text-white/50 text-sm">Minutes used</div><div class="text-3xl font-extrabold mt-1">182<span class="text-base text-white/40">/500</span></div><div class="h-1.5 bg-white/10 rounded-full mt-2"><div class="h-1.5 bg-brand-500 rounded-full" style="width:36%"></div></div></div>
         </section>
-
-        <!-- RIGHT COLUMN -->
-        <div class="space-y-6">
-          <!-- TODAY'S APPOINTMENTS -->
-          <section class="glass rounded-2xl p-5">
-            <h2 class="font-bold mb-4">Today's appointments</h2>
-            <div class="space-y-3 text-sm">
-              <div class="flex items-center gap-3"><div class="text-center w-12 shrink-0"><div class="font-bold">10:00</div><div class="text-xs text-white/40">AM</div></div><div class="flex-1 border-l border-white/10 pl-3"><div class="font-medium">Daniel Reyes</div><div class="text-white/40 text-xs">Teeth cleaning</div></div></div>
-              <div class="flex items-center gap-3"><div class="text-center w-12 shrink-0"><div class="font-bold">11:30</div><div class="text-xs text-white/40">AM</div></div><div class="flex-1 border-l border-white/10 pl-3"><div class="font-medium">Sarah Lin</div><div class="text-white/40 text-xs">New patient exam</div></div></div>
-              <div class="flex items-center gap-3"><div class="text-center w-12 shrink-0"><div class="font-bold">2:00</div><div class="text-xs text-white/40">PM</div></div><div class="flex-1 border-l border-white/10 pl-3"><div class="font-medium">Marcus Webb</div><div class="text-white/40 text-xs">Whitening consult</div></div></div>
-              <div class="flex items-center gap-3"><div class="text-center w-12 shrink-0"><div class="font-bold">4:15</div><div class="text-xs text-white/40">PM</div></div><div class="flex-1 border-l border-white/10 pl-3"><div class="font-medium">Olivia Grant</div><div class="text-white/40 text-xs">Cleaning</div></div></div>
+        <div class="grid lg:grid-cols-3 gap-6 mt-6">
+          <section class="lg:col-span-2 glass rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-4"><h2 class="font-bold">Recent calls</h2><a onclick="showView('calls')" class="text-sm text-brand-400 hover:text-brand-300 cursor-pointer">View all →</a></div>
+            <div class="overflow-hidden rounded-xl border border-white/10">
+              <table class="w-full text-sm"><thead class="bg-white/5 text-white/50 text-xs uppercase"><tr><th class="text-left font-medium px-4 py-2.5">Caller</th><th class="text-left font-medium px-4 py-2.5 hidden sm:table-cell">Time</th><th class="text-left font-medium px-4 py-2.5">Outcome</th><th class="text-left font-medium px-4 py-2.5 hidden sm:table-cell">Length</th><th></th></tr></thead>
+              <tbody id="rowsRecent" class="divide-y divide-white/5"></tbody></table>
             </div>
           </section>
-          <!-- DAILY SUMMARY -->
-          <section class="glass rounded-2xl p-5">
-            <div class="flex items-center gap-2 mb-3"><span class="text-lg">💬</span><h2 class="font-bold">Daily summary</h2></div>
-            <p class="text-sm text-white/70 leading-relaxed">Mira handled <b class="text-white">14 calls</b> today, booked <b class="text-white">6 appointments</b>, and captured <b class="text-white">2 new leads</b>. One caller asked about Invisalign pricing — you may want to add it to the script.</p>
-            <div class="text-xs text-white/40 mt-3">Sent to your WhatsApp at 6:00 PM daily.</div>
+          <div class="space-y-6">
+            <section class="glass rounded-2xl p-5">
+              <h2 class="font-bold mb-4">Today's appointments</h2>
+              <div id="apptMini" class="space-y-3 text-sm"></div>
+            </section>
+            <section class="glass rounded-2xl p-5">
+              <div class="flex items-center gap-2 mb-3"><span class="text-lg">💬</span><h2 class="font-bold">Daily summary</h2></div>
+              <p class="text-sm text-white/70 leading-relaxed">Mira handled <b class="text-white">14 calls</b> today, booked <b class="text-white">6 appointments</b>, and captured <b class="text-white">2 new leads</b>. One caller asked about Invisalign pricing — you may want to add it to the script.</p>
+              <div class="text-xs text-white/40 mt-3">Sent to your WhatsApp at 6:00 PM daily.</div>
+            </section>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ CALLS ============ -->
+      <div class="view" id="view-calls">
+        <div class="flex items-center justify-between mb-5">
+          <h1 class="text-2xl font-extrabold">Calls</h1>
+          <div class="flex gap-2 text-sm" id="callFilters">
+            <button onclick="filterCalls('all',this)" class="filt bg-brand-600 px-3 py-1.5 rounded-lg">All</button>
+            <button onclick="filterCalls('booked',this)" class="filt bg-white/5 px-3 py-1.5 rounded-lg">Booked</button>
+            <button onclick="filterCalls('question',this)" class="filt bg-white/5 px-3 py-1.5 rounded-lg">Questions</button>
+            <button onclick="filterCalls('transferred',this)" class="filt bg-white/5 px-3 py-1.5 rounded-lg">Transferred</button>
+          </div>
+        </div>
+        <div class="glass rounded-2xl overflow-hidden">
+          <table class="w-full text-sm"><thead class="bg-white/5 text-white/50 text-xs uppercase"><tr><th class="text-left font-medium px-4 py-3">Caller</th><th class="text-left font-medium px-4 py-3 hidden sm:table-cell">Time</th><th class="text-left font-medium px-4 py-3">Outcome</th><th class="text-left font-medium px-4 py-3 hidden sm:table-cell">Length</th><th></th></tr></thead>
+          <tbody id="rowsAll" class="divide-y divide-white/5"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ============ APPOINTMENTS ============ -->
+      <div class="view" id="view-appointments">
+        <h1 class="text-2xl font-extrabold mb-5">Appointments</h1>
+        <div id="apptFull" class="space-y-6"></div>
+      </div>
+
+      <!-- ============ CUSTOMERS ============ -->
+      <div class="view" id="view-customers">
+        <h1 class="text-2xl font-extrabold mb-5">Customers</h1>
+        <div class="glass rounded-2xl overflow-hidden">
+          <table class="w-full text-sm"><thead class="bg-white/5 text-white/50 text-xs uppercase"><tr><th class="text-left font-medium px-4 py-3">Name</th><th class="text-left font-medium px-4 py-3 hidden sm:table-cell">Phone</th><th class="text-left font-medium px-4 py-3">Last interaction</th><th class="text-left font-medium px-4 py-3 hidden sm:table-cell">Status</th></tr></thead>
+          <tbody id="rowsCustomers" class="divide-y divide-white/5"></tbody></table>
+        </div>
+      </div>
+
+      <!-- ============ SCRIPT & VOICE ============ -->
+      <div class="view" id="view-script">
+        <h1 class="text-2xl font-extrabold mb-5">Script &amp; Voice</h1>
+        <div class="glass rounded-2xl p-6 max-w-3xl">
+          <div class="text-sm text-white/70 mb-2">Voice</div>
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+            <div class="opt glass rounded-xl p-3 text-center sel" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Mira</div><div class="text-xs text-white/40">Warm female</div></div>
+            <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div></div>
+            <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div></div>
+            <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div></div>
+          </div>
+          <div class="flex items-center justify-between mb-2"><div class="text-sm text-white/70">Receptionist script</div><span class="text-xs text-green-400">✓ Dental template</span></div>
+          <textarea rows="10" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 text-sm leading-relaxed">You are the receptionist for Bright Smile Dental. Be warm, friendly, and brief.
+1. Greet the caller and say the business name.
+2. Ask how you can help.
+3. To book: ask which service, offer 2 open times, and confirm.
+4. If asked about price, quote from the services list.
+5. For anything complex or urgent, offer to transfer to a team member.
+Always confirm the caller's name and number before ending the call.</textarea>
+          <div class="flex gap-2 mt-2 text-xs">
+            <button class="glass px-3 py-1.5 rounded-lg">✨ More formal</button>
+            <button class="glass px-3 py-1.5 rounded-lg">😊 More casual</button>
+            <button class="glass px-3 py-1.5 rounded-lg">➕ Add an FAQ</button>
+          </div>
+          <button onclick="saved(this)" class="mt-5 bg-brand-600 hover:bg-brand-700 px-6 py-2.5 rounded-lg font-semibold">Save changes</button>
+        </div>
+      </div>
+
+      <!-- ============ INTEGRATIONS ============ -->
+      <div class="view" id="view-integrations">
+        <h1 class="text-2xl font-extrabold mb-2">Integrations</h1>
+        <p class="text-white/60 text-sm mb-5">Connect your calendar and tools so Mira books automatically.</p>
+        <div id="integList" class="space-y-2.5 max-w-3xl"></div>
+      </div>
+
+      <!-- ============ SETTINGS ============ -->
+      <div class="view" id="view-settings">
+        <h1 class="text-2xl font-extrabold mb-5">Settings</h1>
+        <div class="max-w-3xl space-y-6">
+          <section class="glass rounded-2xl p-6">
+            <h2 class="font-bold mb-4">Business info</h2>
+            <div class="space-y-3">
+              <div><label class="text-xs text-white/50">Business name</label><input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-2.5" value="Bright Smile Dental"></div>
+              <div class="grid md:grid-cols-2 gap-3">
+                <div><label class="text-xs text-white/50">Phone</label><input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-2.5" value="(305) 555-0100"></div>
+                <div><label class="text-xs text-white/50">Hours</label><input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-2.5" value="Mon–Fri 9am–6pm"></div>
+              </div>
+              <div><label class="text-xs text-white/50">Address</label><input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-2.5" value="123 Main St, Miami, FL"></div>
+            </div>
+            <button onclick="saved(this)" class="mt-4 bg-brand-600 hover:bg-brand-700 px-5 py-2.5 rounded-lg font-semibold text-sm">Save</button>
+          </section>
+
+          <section class="glass rounded-2xl p-6">
+            <h2 class="font-bold mb-1">Notifications</h2>
+            <p class="text-xs text-white/40 mb-4">How Mira keeps you posted.</p>
+            <div class="text-sm text-white/70 mb-2">📣 Instant alert on new booking</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5 mb-5">
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span>💬 WhatsApp</span><span class="check text-brand-400">●</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>✉️ SMS</span><span class="check text-white/20">○</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>📧 Email</span><span class="check text-white/20">○</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>📞 Call</span><span class="check text-white/20">○</span></div>
+            </div>
+            <div class="text-sm text-white/70 mb-2">📊 Daily report</div>
+            <div class="flex flex-wrap items-center gap-2 text-sm text-white/70">
+              <select class="bg-white/5 border border-white/15 rounded-lg px-3 py-2"><option>WhatsApp</option><option>SMS</option><option>Email</option><option>Call me</option></select>
+              <select class="bg-white/5 border border-white/15 rounded-lg px-3 py-2"><option>Once a day</option><option>Twice a day</option></select>
+              <span>at</span>
+              <select class="bg-white/5 border border-white/15 rounded-lg px-3 py-2"><option>6:00 PM</option><option>8:00 AM</option><option>9:00 PM</option></select>
+            </div>
+            <button onclick="saved(this)" class="mt-4 bg-brand-600 hover:bg-brand-700 px-5 py-2.5 rounded-lg font-semibold text-sm">Save</button>
+          </section>
+
+          <section class="glass rounded-2xl p-6">
+            <h2 class="font-bold mb-4">Plan &amp; billing</h2>
+            <div class="flex items-center justify-between">
+              <div><div class="font-semibold">Free trial <span class="badge bg-brand-500/20 text-brand-200 ml-1">11 days left</span></div><div class="text-xs text-white/40 mt-0.5">First charge Jul 15 · Starter $249/mo</div></div>
+              <button onclick="openUpgrade()" class="bg-brand-600 hover:bg-brand-700 px-5 py-2.5 rounded-lg font-semibold text-sm">Upgrade</button>
+            </div>
           </section>
         </div>
       </div>
+
     </div>
   </main>
 </div>
@@ -139,17 +218,9 @@
 <div id="transcriptPanel" class="fixed inset-0 z-40 hidden">
   <div class="absolute inset-0 bg-black/60" onclick="closeTranscript()"></div>
   <aside class="absolute right-0 top-0 h-full w-full max-w-md glass border-l border-white/10 p-6 overflow-y-auto">
-    <div class="flex items-center justify-between mb-5">
-      <h3 class="font-bold">Call transcript</h3>
-      <button onclick="closeTranscript()" class="text-white/50 hover:text-white text-lg">✕</button>
-    </div>
+    <div class="flex items-center justify-between mb-5"><h3 class="font-bold">Call transcript</h3><button onclick="closeTranscript()" class="text-white/50 hover:text-white text-lg">✕</button></div>
     <div id="trMeta" class="glass rounded-xl p-4 mb-4 text-sm"></div>
-    <!-- fake recording player -->
-    <div class="glass rounded-xl p-3 mb-5 flex items-center gap-3">
-      <button class="w-9 h-9 rounded-full bg-brand-600 grid place-items-center shrink-0">▶</button>
-      <div class="flex-1 h-1.5 bg-white/10 rounded-full"><div class="h-1.5 bg-brand-500 rounded-full w-1/3"></div></div>
-      <span class="text-xs text-white/40" id="trDur">1:12</span>
-    </div>
+    <div class="glass rounded-xl p-3 mb-5 flex items-center gap-3"><button class="w-9 h-9 rounded-full bg-brand-600 grid place-items-center shrink-0">▶</button><div class="flex-1 h-1.5 bg-white/10 rounded-full"><div class="h-1.5 bg-brand-500 rounded-full w-1/3"></div></div><span class="text-xs text-white/40" id="trDur">1:12</span></div>
     <div id="trBody" class="space-y-2 text-sm"></div>
   </aside>
 </div>
@@ -157,82 +228,123 @@
 <!-- TEST CALL MODAL -->
 <div id="testModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
   <div class="glass rounded-2xl max-w-sm w-full p-6 text-center relative">
-    <button onclick="document.getElementById('testModal').classList.add('hidden');document.getElementById('testModal').classList.remove('flex')" class="absolute top-4 right-4 text-white/50 hover:text-white text-lg">✕</button>
-    <div class="text-3xl mb-2">📞</div>
-    <h3 class="font-bold text-lg">Test your receptionist</h3>
+    <button onclick="closeTest()" class="absolute top-4 right-4 text-white/50 hover:text-white text-lg">✕</button>
+    <div class="text-3xl mb-2">📞</div><h3 class="font-bold text-lg">Test your receptionist</h3>
     <p class="text-white/60 text-sm mt-1 mb-4">Enter your cell and Mira calls you in seconds.</p>
-    <input type="tel" placeholder="(555) 000-0000" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 mb-3 outline-none focus:border-brand-500">
+    <input type="tel" placeholder="(555) 000-0000" class="w-full bg-white/5 border border-white/15 rounded-xl px-4 py-3 mb-3">
     <button onclick="alert('📞 Ringing... Mira is calling you! (demo)')" class="w-full bg-brand-600 hover:bg-brand-700 py-3 rounded-xl font-semibold">Call me now</button>
   </div>
 </div>
 
+<!-- UPGRADE MODAL -->
+<div id="upgradeModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+  <div class="glass rounded-2xl max-w-2xl w-full p-6 relative">
+    <button onclick="closeUpgrade()" class="absolute top-4 right-4 text-white/50 hover:text-white text-lg">✕</button>
+    <h3 class="font-bold text-xl text-center mb-1">Upgrade your plan</h3>
+    <p class="text-white/60 text-sm text-center mb-6">You're on the free trial — pick a plan to keep Mira running.</p>
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="glass rounded-xl p-5"><div class="text-sm text-white/60">Starter</div><div class="text-2xl font-extrabold mt-1">$249<span class="text-sm text-white/40">/mo</span></div><ul class="text-xs text-white/60 mt-3 space-y-1"><li>✓ 500 min/mo</li><li>✓ Calls + Text + WhatsApp</li><li>✓ Calendar booking</li></ul><button onclick="saved(this)" class="mt-4 w-full bg-white/10 hover:bg-white/15 py-2 rounded-lg text-sm font-semibold">Choose</button></div>
+      <div class="rounded-xl p-5 border-2 border-brand-500 bg-brand-600/10 relative"><div class="absolute -top-2.5 left-1/2 -translate-x-1/2 bg-brand-500 text-[10px] font-bold px-2 py-0.5 rounded-full">POPULAR</div><div class="text-sm text-brand-200">Pro</div><div class="text-2xl font-extrabold mt-1">$499<span class="text-sm text-white/40">/mo</span></div><ul class="text-xs text-white/70 mt-3 space-y-1"><li>✓ 2,000 min/mo</li><li>✓ Multiple locations</li><li>✓ Live transfer</li></ul><button onclick="saved(this)" class="mt-4 w-full bg-brand-600 hover:bg-brand-700 py-2 rounded-lg text-sm font-semibold">Choose</button></div>
+      <div class="glass rounded-xl p-5"><div class="text-sm text-white/60">Enterprise</div><div class="text-2xl font-extrabold mt-1">Custom</div><ul class="text-xs text-white/60 mt-3 space-y-1"><li>✓ Unlimited minutes</li><li>✓ Multiple numbers</li><li>✓ CRM integrations</li></ul><a href="mailto:hello@trymira.ai" class="mt-4 block text-center bg-white/10 hover:bg-white/15 py-2 rounded-lg text-sm font-semibold">Talk to us</a></div>
+    </div>
+  </div>
+</div>
+
 <script>
+  // ---------- data ----------
   let calls=[
-    {name:'Daniel Reyes', init:'DR', time:'9:42 AM', outcome:'Booked', oc:'green', len:'1:12', dur:'1:12',
-      lines:[['mira','Thanks for calling Bright Smile Dental, this is Mira. How can I help?'],['caller','I\'d like to book a teeth cleaning this week.'],['mira','I have Thursday at 2 PM or Friday at 10 AM. Which works best?'],['caller','Friday at 10 works.'],['mira','Perfect. Can I get your name and callback number?'],['caller','Daniel, 555-0142.'],['mira','You\'re all set for Friday at 10 AM, Daniel. We\'ll text a reminder!']]},
-    {name:'Sarah Lin', init:'SL', time:'9:15 AM', outcome:'Booked', oc:'green', len:'1:48', dur:'1:48',
+    {name:'Daniel Reyes',init:'DR',time:'9:42 AM',outcome:'Booked',oc:'green',len:'1:12',dur:'1:12',phone:'(305) 555-0142',
+      lines:[['mira','Thanks for calling Bright Smile Dental, this is Mira. How can I help?'],['caller','I\'d like to book a teeth cleaning this week.'],['mira','I have Thursday at 2 PM or Friday at 10 AM. Which works best?'],['caller','Friday at 10 works.'],['mira','Perfect. Can I get your name and callback number?'],['caller','Daniel, 305-555-0142.'],['mira','You\'re all set for Friday at 10 AM, Daniel. We\'ll text a reminder!']]},
+    {name:'Sarah Lin',init:'SL',time:'9:15 AM',outcome:'Booked',oc:'green',len:'1:48',dur:'1:48',phone:'(305) 555-0188',
       lines:[['mira','Bright Smile Dental, this is Mira!'],['caller','Do you take new patients?'],['mira','We do! I can book a new patient exam — it\'s free. Does tomorrow 11:30 AM work?'],['caller','Yes, perfect.'],['mira','Great, you\'re booked. What name should I put it under?'],['caller','Sarah Lin.'],['mira','All set, Sarah. See you tomorrow at 11:30!']]},
-    {name:'Unknown', init:'?', time:'8:51 AM', outcome:'Question', oc:'amber', len:'0:46', dur:'0:46',
+    {name:'Unknown',init:'?',time:'8:51 AM',outcome:'Question',oc:'amber',len:'0:46',dur:'0:46',phone:'(786) 555-0121',
       lines:[['mira','Bright Smile Dental, this is Mira. How can I help?'],['caller','How much is teeth whitening?'],['mira','Whitening is $450, and we offer a free consult first. Would you like to book the consult?'],['caller','I\'ll think about it, thanks.'],['mira','Of course! Call back anytime. Have a great day.']]},
-    {name:'Marcus Webb', init:'MW', time:'8:30 AM', outcome:'Booked', oc:'green', len:'2:03', dur:'2:03',
-      lines:[['mira','Good morning, Bright Smile Dental!'],['caller','I want to talk about whitening options.'],['mira','Happy to help. I can set a whitening consult for today at 2 PM — sound good?'],['caller','Works for me.'],['mira','Booked! Your name and number?'],['caller','Marcus Webb, 555-0199.'],['mira','See you at 2, Marcus!']]},
-    {name:'Olivia Grant', init:'OG', time:'Yesterday', outcome:'Transferred', oc:'blue', len:'0:38', dur:'0:38',
+    {name:'Marcus Webb',init:'MW',time:'8:30 AM',outcome:'Booked',oc:'green',len:'2:03',dur:'2:03',phone:'(305) 555-0199',
+      lines:[['mira','Good morning, Bright Smile Dental!'],['caller','I want to talk about whitening options.'],['mira','Happy to help. I can set a whitening consult for today at 2 PM — sound good?'],['caller','Works for me.'],['mira','Booked! Your name and number?'],['caller','Marcus Webb, 305-555-0199.'],['mira','See you at 2, Marcus!']]},
+    {name:'Olivia Grant',init:'OG',time:'Yesterday',outcome:'Transferred',oc:'blue',len:'0:38',dur:'0:38',phone:'(954) 555-0177',
       lines:[['mira','Bright Smile Dental, this is Mira.'],['caller','I have severe tooth pain, is this an emergency line?'],['mira','I\'m sorry to hear that. Let me transfer you to a team member right away.'],['system','— Call transferred to front desk —']]},
   ];
+  const appts=[
+    {day:'Today · Monday, Jun 30',items:[['10:00 AM','Daniel Reyes','Teeth cleaning'],['11:30 AM','Sarah Lin','New patient exam'],['2:00 PM','Marcus Webb','Whitening consult'],['4:15 PM','Olivia Grant','Cleaning']]},
+    {day:'Tomorrow · Tuesday, Jul 1',items:[['9:00 AM','James Cole','Filling'],['1:00 PM','Nina Park','Cleaning'],['3:30 PM','Rob Diaz','Whitening']]},
+    {day:'Wednesday, Jul 2',items:[['10:30 AM','Ella Moore','New patient exam'],['2:00 PM','Tom Reed','Cleaning']]},
+  ];
   const oc={green:'bg-green-500/15 text-green-400',amber:'bg-amber-500/15 text-amber-400',blue:'bg-blue-500/15 text-blue-300'};
-  function renderRows(){
-    document.getElementById('callRows').innerHTML=calls.map((c,i)=>`
-      <tr class="row cursor-pointer" onclick="openTranscript(${i})">
-        <td class="px-4 py-3"><div class="flex items-center gap-2.5"><span class="w-7 h-7 rounded-full bg-white/10 grid place-items-center text-xs font-semibold">${c.init}</span><span class="font-medium">${c.name}</span></div></td>
-        <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.time}</td>
-        <td class="px-4 py-3"><span class="badge ${oc[c.oc]||oc.blue}">${c.outcome}</span></td>
-        <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.len}</td>
-        <td class="px-4 py-3 text-white/30">›</td>
-      </tr>`).join('');
-  }
-  renderRows();
+  const integrations=[
+    {n:'Google Calendar',s:'deep',connected:true},{n:'Calendly',s:'deep'},{n:'Cal.com',s:'deep'},
+    {n:'Dentrix / Open Dental',s:'deep'},{n:'Jobber',s:'deep'},{n:'Square Appointments',s:'deep'},
+    {n:'Housecall Pro',s:'deep'},{n:'Something else (via Zapier)',s:'lite'}
+  ];
 
-  // ---- Dados REAIS da Vapi (quando rodando no servidor local). Fallback: mock. ----
+  // ---------- renderers ----------
+  const badge=s=>s==='deep'?'<span class="badge bg-green-500/15 text-green-400">⚡ Auto-sync</span>':'<span class="badge bg-white/10 text-white/60">via Zapier</span>';
+  function rowHTML(c,i){return `<tr class="row cursor-pointer" onclick="openTranscript(${i})">
+    <td class="px-4 py-3"><div class="flex items-center gap-2.5"><span class="w-7 h-7 rounded-full bg-white/10 grid place-items-center text-xs font-semibold">${c.init}</span><span class="font-medium">${c.name}</span></div></td>
+    <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.time}</td>
+    <td class="px-4 py-3"><span class="badge ${oc[c.oc]||oc.blue}">${c.outcome}</span></td>
+    <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.len}</td><td class="px-4 py-3 text-white/30">›</td></tr>`;}
+  function renderTables(filter){
+    document.getElementById('rowsRecent').innerHTML=calls.slice(0,5).map(rowHTML).join('');
+    const f=(filter||'all');
+    document.getElementById('rowsAll').innerHTML=calls.map((c,i)=>[c,i]).filter(([c])=>f==='all'||c.outcome.toLowerCase()===f).map(([c,i])=>rowHTML(c,i)).join('');
+  }
+  function renderAppts(){
+    const mini=appts[0].items.map(a=>`<div class="flex items-center gap-3"><div class="text-center w-14 shrink-0"><div class="font-bold">${a[0].split(' ')[0]}</div><div class="text-xs text-white/40">${a[0].split(' ')[1]}</div></div><div class="flex-1 border-l border-white/10 pl-3"><div class="font-medium">${a[1]}</div><div class="text-white/40 text-xs">${a[2]}</div></div></div>`).join('');
+    document.getElementById('apptMini').innerHTML=mini;
+    document.getElementById('apptFull').innerHTML=appts.map(d=>`<section class="glass rounded-2xl p-5"><h2 class="font-bold mb-3">${d.day}</h2><div class="space-y-2">${d.items.map(a=>`<div class="flex items-center gap-4 py-2 border-b border-white/5 last:border-0"><div class="w-20 text-sm font-semibold">${a[0]}</div><div class="flex-1"><div class="font-medium text-sm">${a[1]}</div><div class="text-xs text-white/40">${a[2]}</div></div><button class="text-xs text-brand-400">Details</button></div>`).join('')}</div></section>`).join('');
+  }
+  function renderCustomers(){
+    const seen={}; calls.forEach(c=>{if(c.name!=='Unknown'){seen[c.name]=seen[c.name]||{name:c.name,init:c.init,phone:c.phone,last:c.outcome,time:c.time};}});
+    document.getElementById('rowsCustomers').innerHTML=Object.values(seen).map(p=>`<tr class="row"><td class="px-4 py-3"><div class="flex items-center gap-2.5"><span class="w-7 h-7 rounded-full bg-white/10 grid place-items-center text-xs font-semibold">${p.init}</span><span class="font-medium">${p.name}</span></div></td><td class="px-4 py-3 text-white/50 hidden sm:table-cell">${p.phone}</td><td class="px-4 py-3 text-white/50">${p.time}</td><td class="px-4 py-3 hidden sm:table-cell"><span class="badge ${oc.green}">Client</span></td></tr>`).join('');
+  }
+  function renderIntegrations(){
+    document.getElementById('integList').innerHTML=integrations.map(t=>`<div class="opt glass rounded-xl p-4 flex items-center justify-between ${t.connected?'sel':''}" onclick="connectInteg(this)">
+      <div class="font-semibold text-sm">${t.n}</div><div class="flex items-center gap-2">${badge(t.s)}<span class="pick text-sm ${t.connected?'bg-green-600':'bg-brand-600'} px-3 py-1.5 rounded-lg">${t.connected?'✓ Connected':'Connect'}</span></div></div>`).join('');
+  }
+
+  // ---------- interactions ----------
+  const titles={dashboard:'Dashboard',calls:'Calls',appointments:'Appointments',customers:'Customers',script:'Script & Voice',integrations:'Integrations',settings:'Settings'};
+  function showView(name){
+    document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+name));
+    document.querySelectorAll('.navlink').forEach(n=>n.classList.toggle('active',n.dataset.view===name));
+    document.getElementById('crumb').textContent=titles[name]||name;
+    if(name==='customers') renderCustomers();
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function filterCalls(f,btn){document.querySelectorAll('#callFilters .filt').forEach(b=>b.className='filt bg-white/5 px-3 py-1.5 rounded-lg');btn.className='filt bg-brand-600 px-3 py-1.5 rounded-lg';renderTables(f);}
+  function openTranscript(i){
+    const c=calls[i];
+    document.getElementById('trMeta').innerHTML=`<div class="font-semibold">${c.name}</div><div class="text-white/40 text-xs mt-0.5">${c.time} · ${c.len} · <span class="${(oc[c.oc]||oc.blue).split(' ')[1]}">${c.outcome}</span></div>`;
+    document.getElementById('trDur').textContent=c.dur;
+    document.getElementById('trBody').innerHTML=c.lines.map(l=>l[0]==='system'?`<div class="text-center text-xs text-white/40 py-1">${l[1]}</div>`:(l[0]==='mira'?`<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[90%]"><b class="text-brand-400">Mira:</b> ${l[1]}</div>`:`<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[90%] ml-auto">${l[1]}</div>`)).join('');
+    document.getElementById('transcriptPanel').classList.remove('hidden');
+  }
+  function closeTranscript(){document.getElementById('transcriptPanel').classList.add('hidden');}
+  function openTest(){const m=document.getElementById('testModal');m.classList.remove('hidden');m.classList.add('flex');}
+  function closeTest(){const m=document.getElementById('testModal');m.classList.add('hidden');m.classList.remove('flex');}
+  function openUpgrade(){const m=document.getElementById('upgradeModal');m.classList.remove('hidden');m.classList.add('flex');}
+  function closeUpgrade(){const m=document.getElementById('upgradeModal');m.classList.add('hidden');m.classList.remove('flex');}
+  function pickVoice(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+  function toggleCh(el){const on=el.classList.toggle('sel');const c=el.querySelector('.check');c.textContent=on?'●':'○';c.className='check '+(on?'text-brand-400':'text-white/20');}
+  function connectInteg(el){el.classList.add('sel');const p=el.querySelector('.pick');p.textContent='✓ Connected';p.className='pick text-sm bg-green-600 px-3 py-1.5 rounded-lg';}
+  function saved(btn){const t=btn.textContent;btn.textContent='✓ Saved';btn.disabled=true;setTimeout(()=>{btn.textContent=t;btn.disabled=false;},1400);}
+
+  // ---------- init ----------
+  renderTables('all'); renderAppts(); renderIntegrations();
+
+  // real Vapi data when running on the server (fallback: mock)
   const MIRA_ID='5296c969-3738-43fb-804d-24a8b617d5f4';
   const initials=n=>(n||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
   const ocFrom=o=>{o=(o||'').toLowerCase();return o.includes('book')?'green':o.includes('transfer')?'blue':(o.includes('question')||o.includes('callback'))?'amber':'blue';};
-  function parseTranscript(t){
-    if(!t) return [];
-    return t.split('\n').filter(Boolean).map(line=>{
-      const m=line.match(/^(AI|Assistant|Bot|User|Customer|Human)\s*:\s*(.*)$/i);
-      if(!m) return ['mira',line];
-      return [/user|customer|human/i.test(m[1])?'caller':'mira', m[2]];
-    });
-  }
-  function adaptReal(c){
-    const lines=parseTranscript(c.transcript);
-    return {name:c.name,init:initials(c.name),time:c.time||'—',outcome:c.outcome||'—',
-      oc:ocFrom(c.outcome),len:'—',dur:'—',
-      lines:lines.length?lines:(c.summary?[['mira',c.summary]]:[['system','— no transcript —']])};
-  }
-  (async()=>{
-    try{
-      const r=await fetch('/api/calls?assistantId='+MIRA_ID);
-      if(!r.ok) return;
-      const data=await r.json();
-      if(Array.isArray(data)&&data.length){ calls=data.map(adaptReal); renderRows(); }
-    }catch(e){/* github pages / offline: mantém o mock */}
-  })();
-
-  function openTranscript(i){
-    const c=calls[i];
-    document.getElementById('trMeta').innerHTML=`<div class="font-semibold">${c.name}</div><div class="text-white/40 text-xs mt-0.5">${c.time} · ${c.len} · <span class="${oc[c.oc].split(' ')[1]}">${c.outcome}</span></div>`;
-    document.getElementById('trDur').textContent=c.dur;
-    document.getElementById('trBody').innerHTML=c.lines.map(l=>{
-      if(l[0]==='system') return `<div class="text-center text-xs text-white/40 py-1">${l[1]}</div>`;
-      const isMira=l[0]==='mira';
-      return isMira
-        ? `<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[90%]"><b class="text-brand-400">Mira:</b> ${l[1]}</div>`
-        : `<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[90%] ml-auto">${l[1]}</div>`;
-    }).join('');
-    const p=document.getElementById('transcriptPanel'); p.classList.remove('hidden');
-  }
-  function closeTranscript(){ document.getElementById('transcriptPanel').classList.add('hidden'); }
+  function parseT(t){return !t?[]:t.split('\n').filter(Boolean).map(line=>{const m=line.match(/^(AI|Assistant|Bot|User|Customer|Human)\s*:\s*(.*)$/i);return !m?['mira',line]:[/user|customer|human/i.test(m[1])?'caller':'mira',m[2]];});}
+  (async()=>{try{
+    const r=await fetch('/api/calls?assistantId='+MIRA_ID); if(!r.ok)return;
+    const data=await r.json();
+    if(Array.isArray(data)&&data.length){
+      calls=data.map(c=>({name:c.name||'Unknown',init:initials(c.name),time:c.time||'—',outcome:(c.outcome||'—'),oc:ocFrom(c.outcome),len:'—',dur:'—',phone:'—',lines:parseT(c.transcript).length?parseT(c.transcript):[['mira',c.summary||'(no transcript)']]}));
+      renderTables('all'); renderCustomers();
+    }
+  }catch(e){}})();
 </script>
 </body>
 </html>
