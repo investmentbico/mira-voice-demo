@@ -44,7 +44,7 @@
 <main class="max-w-3xl mx-auto px-5 py-10 pb-32">
 
   <div class="text-center mb-8">
-    <div class="text-sm text-brand-400 font-semibold">Step <span id="stepNum">1</span> of 6</div>
+    <div class="text-sm text-brand-400 font-semibold">Step <span id="stepNum">1</span> of 7</div>
   </div>
 
   <!-- STEP 1: CATEGORY -->
@@ -140,8 +140,52 @@ Always confirm the caller's name and number before ending the call.</textarea>
     </div>
   </section>
 
-  <!-- STEP 6: TEST + PAY -->
+  <!-- STEP 6: NOTIFICATIONS -->
   <section class="step" data-step="6">
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Stay in the loop — your way</h1>
+    <p class="text-center text-white/60 mt-2">How should Mira keep you posted? Smart defaults are set — just tweak if you want.</p>
+
+    <!-- instant alerts -->
+    <div class="mt-8">
+      <div class="font-semibold">📣 Instant alert — new booking or hot lead</div>
+      <p class="text-xs text-white/40 mt-0.5 mb-3">Get pinged the moment it happens. Pick one or more.</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span>💬 WhatsApp</span><span class="check text-brand-400 text-lg">●</span></div>
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>✉️ SMS</span><span class="check text-white/20 text-lg">○</span></div>
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>📧 Email</span><span class="check text-white/20 text-lg">○</span></div>
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>📞 Call me</span><span class="check text-white/20 text-lg">○</span></div>
+      </div>
+      <div class="mt-3 flex items-center gap-2 text-sm text-white/70">
+        <span>Alert me for:</span>
+        <select class="bg-white/5 border border-white/15 rounded-lg px-3 py-2"><option>Every booking</option><option>Bookings + hot leads</option><option>Every call</option></select>
+      </div>
+    </div>
+
+    <!-- daily report -->
+    <div class="mt-7">
+      <div class="font-semibold">📊 Daily report</div>
+      <p class="text-xs text-white/40 mt-0.5 mb-3">A quick summary: calls answered, appointments booked, leads captured.</p>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2.5">
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span>💬 WhatsApp</span><span class="check text-brand-400 text-lg">●</span></div>
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>✉️ SMS</span><span class="check text-white/20 text-lg">○</span></div>
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>📧 Email</span><span class="check text-white/20 text-lg">○</span></div>
+        <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span>📞 Call me</span><span class="check text-white/20 text-lg">○</span></div>
+      </div>
+      <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-white/70">
+        <span>How often:</span>
+        <select class="bg-white/5 border border-white/15 rounded-lg px-3 py-2"><option>Once a day</option><option>Twice a day</option><option>Every few hours</option></select>
+        <span>at</span>
+        <select class="bg-white/5 border border-white/15 rounded-lg px-3 py-2"><option>6:00 PM</option><option>8:00 AM</option><option>12:00 PM</option><option>9:00 PM</option></select>
+      </div>
+    </div>
+
+    <div class="mt-6 bg-brand-500/10 border border-brand-500/30 rounded-xl px-4 py-3 text-sm text-brand-200">
+      ✨ We set all of this up automatically when you activate — nothing to install.
+    </div>
+  </section>
+
+  <!-- STEP 7: TEST + PAY -->
+  <section class="step" data-step="7">
     <h1 class="text-2xl md:text-3xl font-extrabold text-center">Almost there — test Mira! 🎉</h1>
     <p class="text-center text-white/60 mt-2">She'll call you right now. Love it? Start your 15 free days.</p>
 
@@ -257,7 +301,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
     document.getElementById('integrationList').innerHTML=h;
   }
 
-  let step=1; const total=6;
+  let step=1; const total=7;
   function render(){
     document.querySelectorAll('.step').forEach(s=>s.classList.toggle('active',+s.dataset.step===step));
     document.getElementById('bar').style.width=(step/total*100)+'%';
