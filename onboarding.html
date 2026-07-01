@@ -36,7 +36,7 @@
         </svg>
       </span> Mira
     </a>
-    <div class="text-sm text-white/50">Need help? <a href="#" class="text-brand-400">Chat with us</a></div>
+    <div class="text-sm text-white/50">Need help? <a href="mailto:hello@trymira.ai" class="text-brand-400">Chat with us</a></div>
   </div>
   <div class="h-1 bg-white/10"><div id="bar" class="h-1 bg-brand-500 transition-all" style="width:16%"></div></div>
 </header>
@@ -112,24 +112,12 @@ Always confirm the caller's name and number before ending the call.</textarea>
     </div>
   </section>
 
-  <!-- STEP 4: CALENDAR -->
+  <!-- STEP 4: INTEGRATIONS -->
   <section class="step" data-step="4">
-    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Connect your calendar</h1>
-    <p class="text-center text-white/60 mt-2">So Mira books appointments without conflicts.</p>
-    <div class="mt-8 space-y-3">
-      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="connect(this)">
-        <div class="flex items-center gap-3"><span class="text-2xl">📅</span><div><div class="font-semibold">Google Calendar</div><div class="text-xs text-white/40">Most popular · connects in one click</div></div></div>
-        <span class="text-sm bg-brand-600 px-4 py-2 rounded-lg">Connect</span>
-      </div>
-      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="connect(this)">
-        <div class="flex items-center gap-3"><span class="text-2xl">🗓️</span><div><div class="font-semibold">Calendly / Cal.com</div><div class="text-xs text-white/40">Free · included in your plan</div></div></div>
-        <span class="text-sm bg-brand-600 px-4 py-2 rounded-lg">Connect</span>
-      </div>
-      <div class="opt glass rounded-xl p-4 flex items-center justify-between" onclick="connect(this)">
-        <div class="flex items-center gap-3"><span class="text-2xl">🆕</span><div><div class="font-semibold">I don't have a calendar yet</div><div class="text-xs text-white/40">We'll create one for you, free</div></div></div>
-        <span class="text-sm bg-white/10 px-4 py-2 rounded-lg">Create one</span>
-      </div>
-    </div>
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Connect your software</h1>
+    <p class="text-center text-white/60 mt-2">Pick what you already use — Mira reads your availability and books for you, automatically.</p>
+    <div id="integrationList" class="mt-8 space-y-2.5"></div>
+    <p class="text-center text-white/40 text-xs mt-4">Don't see yours? Any tool with a calendar works — pick "Something else" and we'll bridge it.</p>
   </section>
 
   <!-- STEP 5: CHANNELS -->
@@ -197,10 +185,77 @@ Always confirm the caller's name and number before ending the call.</textarea>
 </footer>
 
 <script>
-  const cats=[['🦷','Dental / Clinic'],['💈','Barbershop'],['💇','Hair Salon'],['💅','Beauty / Spa'],['🔧','Auto Repair'],['🩺','Medical Office'],['🐾','Pet / Vet'],['🍝','Restaurant'],['🏋️','Gym / Studio'],['🧹','Cleaning / Home'],['⚖️','Law / Accounting'],['🏠','Real Estate']];
+  const cats=[
+    ['🦷','Dental / Clinics','dental'],['🩺','Medical Office','medical'],['👓','Optometry','optometry'],
+    ['🐾','Pet / Veterinary','pet'],['⚖️','Law / Legal','law'],['📊','Accounting / Tax','accounting'],
+    ['💇','Hair Salon','salon'],['💈','Barbershop','barbershop'],['💅','Nail Salon','nails'],
+    ['💆','Spa / Massage','spa'],['✨','Beauty / Med-Spa','beauty'],['🎨','Tattoo / Piercing','tattoo'],
+    ['🏋️','Gym / Fitness','gym'],['🔧','Auto Repair','auto'],['🏊','Pool Service','pool'],
+    ['🏠','Roofing','roofing'],['❄️','HVAC','hvac'],['🚰','Plumbing','plumbing'],
+    ['⚡','Electrician','electrician'],['🐜','Pest Control','pest'],['🧹','Cleaning','cleaning'],
+    ['🌿','Landscaping / Lawn','landscaping'],['🔨','Contractor / Handyman','contractor'],
+    ['🍽️','Restaurant','restaurant'],['🏡','Real Estate','realestate']
+  ];
   document.getElementById('catGrid').innerHTML=cats.map(c=>`
-    <div class="opt glass rounded-xl p-4 text-center" onclick="pickCat(this)">
+    <div class="opt glass rounded-xl p-4 text-center" onclick="pickCat(this,'${c[2]}')">
       <div class="text-3xl">${c[0]}</div><div class="text-sm mt-1 text-white/80">${c[1]}</div></div>`).join('');
+
+  // catálogo de integrações por categoria (deep=auto-sync, lite=via Zapier, calendar=fallback)
+  const INTEGRATIONS = {
+    universal:[
+      {n:'Google Calendar',s:'calendar',note:'Works with almost any setup'},
+      {n:'Calendly',s:'deep'},{n:"Cal.com — free, we set it up",s:'deep',note:"No software yet? We'll create one for you"},
+      {n:'Something else (via Zapier)',s:'lite',note:'Bridge to 1000s of apps'}
+    ],
+    byCategory:{
+      dental:{hipaa:true,tools:[{n:'Open Dental',s:'deep'},{n:'Dentrix / Ascend',s:'deep'},{n:'Eaglesoft',s:'lite'},{n:'Curve Dental',s:'lite'}]},
+      medical:{hipaa:true,tools:[{n:'athenahealth',s:'deep'},{n:'eClinicalWorks',s:'lite'},{n:'NextGen',s:'lite'},{n:'ModMed',s:'lite'}]},
+      optometry:{hipaa:true,tools:[{n:'RevolutionEHR',s:'deep'},{n:'Jane App',s:'deep'},{n:'Eyefinity / OfficeMate',s:'lite'}]},
+      pet:{tools:[{n:'ezyVet',s:'deep'},{n:'Vetspire',s:'deep'},{n:'IDEXX Neo',s:'lite'},{n:'AVImark / Cornerstone',s:'lite'}]},
+      law:{tools:[{n:'Clio',s:'deep'},{n:'MyCase',s:'deep'},{n:'PracticePanther',s:'deep'},{n:'Smokeball',s:'lite'}]},
+      accounting:{tools:[{n:'TaxDome',s:'deep'},{n:'Karbon',s:'deep'},{n:'Canopy',s:'lite'}]},
+      salon:{tools:[{n:'Vagaro',s:'deep'},{n:'Square Appointments',s:'deep'},{n:'Booksy',s:'deep'},{n:'Fresha',s:'lite'}]},
+      barbershop:{tools:[{n:'Booksy',s:'deep'},{n:'Square Appointments',s:'deep'},{n:'Vagaro',s:'deep'},{n:'Fresha',s:'lite'}]},
+      nails:{tools:[{n:'Vagaro',s:'deep'},{n:'Square Appointments',s:'deep'},{n:'Booksy',s:'deep'},{n:'Fresha',s:'lite'}]},
+      spa:{tools:[{n:'Vagaro',s:'deep'},{n:'Acuity Scheduling',s:'deep'},{n:'Mindbody',s:'deep'},{n:'Boulevard',s:'lite'}]},
+      beauty:{tools:[{n:'Vagaro',s:'deep'},{n:'Square Appointments',s:'deep'},{n:'Boulevard',s:'lite'},{n:'Zenoti',s:'lite'}]},
+      tattoo:{tools:[{n:'Acuity Scheduling',s:'deep'},{n:'Booksy',s:'deep'},{n:'Square Appointments',s:'deep'},{n:'Bookedin',s:'lite'}]},
+      gym:{tools:[{n:'Mindbody',s:'deep'},{n:'WellnessLiving',s:'deep'},{n:'Zen Planner',s:'lite'},{n:'PushPress',s:'lite'}]},
+      auto:{tools:[{n:'Tekmetric',s:'deep'},{n:'Shopmonkey',s:'deep'},{n:'AutoLeap',s:'lite'},{n:'Mitchell1',s:'lite'}]},
+      pool:{tools:[{n:'Skimmer',s:'deep'},{n:'Jobber',s:'deep'},{n:'Housecall Pro',s:'deep'},{n:'GorillaDesk',s:'lite'}]},
+      roofing:{tools:[{n:'JobNimbus',s:'deep'},{n:'Jobber',s:'deep'},{n:'Housecall Pro',s:'deep'},{n:'AccuLynx',s:'lite'}]},
+      hvac:{tools:[{n:'Housecall Pro',s:'deep'},{n:'Jobber',s:'deep'},{n:'ServiceTitan',s:'deep'},{n:'FieldEdge',s:'lite'}]},
+      plumbing:{tools:[{n:'Housecall Pro',s:'deep'},{n:'Jobber',s:'deep'},{n:'ServiceTitan',s:'deep'},{n:'ServiceFusion',s:'lite'}]},
+      electrician:{tools:[{n:'Housecall Pro',s:'deep'},{n:'Jobber',s:'deep'},{n:'ServiceTitan',s:'lite'},{n:'ServiceFusion',s:'lite'}]},
+      pest:{tools:[{n:'GorillaDesk',s:'deep'},{n:'FieldRoutes',s:'lite'},{n:'PestPac',s:'lite'},{n:'Briostack',s:'lite'}]},
+      cleaning:{tools:[{n:'ZenMaid',s:'deep'},{n:'Jobber',s:'deep'},{n:'Housecall Pro',s:'deep'},{n:'Launch27',s:'lite'}]},
+      landscaping:{tools:[{n:'Jobber',s:'deep'},{n:'Service Autopilot',s:'lite'},{n:'LMN',s:'lite'},{n:'Aspire',s:'lite'}]},
+      contractor:{tools:[{n:'Housecall Pro',s:'deep'},{n:'Jobber',s:'deep'},{n:'Thryv',s:'lite'},{n:'ServiceTitan',s:'lite'}]},
+      restaurant:{tools:[{n:'Yelp Guest Manager',s:'lite'},{n:'Toast Tables',s:'lite'},{n:'OpenTable',s:'lite'},{n:'Resy',s:'lite'}]},
+      realestate:{tools:[{n:'Follow Up Boss',s:'deep'},{n:'Calendly',s:'deep'},{n:'ShowingTime',s:'lite'}]}
+    }
+  };
+  let selectedCat='generic';
+  function badge(s){
+    return s==='deep' ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">⚡ Auto-sync</span>'
+      : s==='calendar' ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300">Calendar sync</span>'
+      : '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-white/10 text-white/60">via Zapier</span>';
+  }
+  function tile(t){
+    const name=t.n||t.name, note=t.note?`<div class="text-xs text-white/40">${t.note}</div>`:'';
+    return `<div class="opt glass rounded-xl p-3.5 flex items-center justify-between" onclick="connectTile(this)">
+      <div><div class="font-semibold text-sm">${name}</div>${note}</div>
+      <div class="flex items-center gap-2">${badge(t.s||t.sync)}<span class="pick text-sm bg-brand-600 px-3 py-1.5 rounded-lg">Connect</span></div></div>`;
+  }
+  function connectTile(el){el.classList.add('sel');const p=el.querySelector('.pick');p.textContent='✓ Connected';p.className='pick text-sm bg-green-600 px-3 py-1.5 rounded-lg';}
+  function renderIntegrations(){
+    const d=INTEGRATIONS.byCategory[selectedCat];
+    let h='';
+    if(d&&d.hipaa) h+=`<div class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2 mb-1">🔒 HIPAA-eligible — we sign a BAA and handle patient data securely.</div>`;
+    if(d&&d.tools){ h+=`<div class="text-xs text-white/40 uppercase tracking-wide">Your software</div>`+d.tools.map(tile).join(''); }
+    h+=`<div class="text-xs text-white/40 uppercase tracking-wide pt-3">Universal — works for anyone</div>`+INTEGRATIONS.universal.map(tile).join('');
+    document.getElementById('integrationList').innerHTML=h;
+  }
 
   let step=1; const total=6;
   function render(){
@@ -209,10 +264,11 @@ Always confirm the caller's name and number before ending the call.</textarea>
     document.getElementById('stepNum').textContent=step;
     document.getElementById('back').classList.toggle('invisible',step===1);
     document.getElementById('next').textContent = step===total ? 'Finish' : 'Continue →';
+    if(step===4) renderIntegrations();
     window.scrollTo({top:0,behavior:'smooth'});
   }
   function go(d){ if(step===total&&d>0){alert('🎉 All set! (demo)');return;} step=Math.min(total,Math.max(1,step+d)); render(); }
-  function pickCat(el){document.querySelectorAll('#catGrid .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');setTimeout(()=>go(1),250);}
+  function pickCat(el,key){selectedCat=key||'generic';document.querySelectorAll('#catGrid .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');setTimeout(()=>go(1),250);}
   function pickVoice(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
   function connect(el){el.classList.add('sel');el.querySelector('span:last-child').textContent='✓ Connected';}
   function toggleCh(el){const on=el.classList.toggle('sel');const c=el.querySelector('.check');c.textContent=on?'●':'○';c.className='check text-xl '+(on?'text-brand-400':'text-white/20');}
