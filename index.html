@@ -318,8 +318,9 @@
       <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
     <div id="demoCaptions" class="space-y-2 text-sm max-h-56 overflow-y-auto"></div>
-    <button id="demoPlayBtn" onclick="playDemo()" class="w-full mt-5 bg-brand-600 hover:bg-brand-700 py-3 rounded-xl font-semibold">▶ Play the call</button>
-    <p class="text-center text-xs text-white/40 mt-2">Plays out loud in your browser · turn sound on 🔊</p>
+    <audio id="demoAudio" src="audio/demo-call.mp3" preload="auto"></audio>
+    <button id="demoPlayBtn" onclick="playDemo()" class="w-full mt-5 bg-brand-600 hover:bg-brand-700 py-3 rounded-xl font-semibold">▶ Play the real call</button>
+    <p class="text-center text-xs text-white/40 mt-2">A real recorded AI call · turn sound on 🔊</p>
   </div>
 </div>
 
@@ -372,66 +373,57 @@
       <p class="text-white/60 text-sm mt-3">${f[1]}</p>
     </details>`).join('');
 
-  // ---- Live demo call (speaks in the browser, no audio file needed) ----
-  const demoScript = [
-    {who:'mira',   text:"Thanks for calling Bright Smile Dental, this is Mira. How can I help you today?"},
-    {who:'caller', text:"Hi, I'd like to book a teeth cleaning sometime this week."},
-    {who:'mira',   text:"I'd be happy to help with that. I have Thursday at 2 PM, or Friday at 10 AM. Which works better for you?"},
-    {who:'caller', text:"Friday at 10 works great."},
-    {who:'mira',   text:"Perfect. Can I get your name and a good callback number?"},
-    {who:'caller', text:"Sure, it's Daniel, five five five, zero one four two."},
-    {who:'mira',   text:"Thank you, Daniel. You're all booked for Friday at 10 AM. We'll text you a reminder. Have a great day!"},
+  // ---- Live demo call — plays a REAL recorded Vapi call (two AI agents) ----
+  const demoLines = [
+    {who:'mira',   text:"Thank you for calling Bright Smile Dental. This is Mira. How can I help you today?"},
+    {who:'caller', text:"Hey, yeah — I was hoping to book a teeth cleaning appointment sometime this week, if you have anything open."},
+    {who:'mira',   text:"Absolutely, I can help with that. I can offer you Wednesday at 10 AM or Thursday at 2 PM. Would either of those work?"},
+    {who:'caller', text:"Oh, Thursday at 2 PM sounds good, I'll take that one. Also — how much do you charge for teeth whitening?"},
+    {who:'mira',   text:"Got you down for Thursday at 2 PM. Whitening is $450, but we always do a free consult first. Could I get your name and a good callback number?"},
+    {who:'caller', text:"Sure thing — my name is Daniel, and my number is 555-0142."},
+    {who:'mira',   text:"Thanks, Daniel! You're booked for a cleaning Thursday at 2 PM. Looking forward to seeing you!"},
+    {who:'caller', text:"Awesome, thanks so much. See you Thursday — have a great day, bye!"},
   ];
-  let demoI = 0, demoVoices = [];
-  function loadVoices(){ demoVoices = ('speechSynthesis' in window) ? speechSynthesis.getVoices() : []; }
-  if('speechSynthesis' in window){ loadVoices(); speechSynthesis.onvoiceschanged = loadVoices; }
-  function chooseVoice(female){
-    const en = demoVoices.filter(v=>/^en/i.test(v.lang));
-    const f = en.find(v=>/female|samantha|victoria|zira|karen|moira|google us english|aria/i.test(v.name));
-    const m = en.find(v=>/male|david|daniel|alex|fred|google uk english male|guy/i.test(v.name));
-    return female ? (f || en[0]) : (m || en.find(v=>v!==(f||en[0])) || en[0]);
-  }
-  function openDemo(){
-    const m=document.getElementById('demoModal'); m.classList.remove('hidden'); m.classList.add('flex');
-  }
+  const demoAudio = document.getElementById('demoAudio');
+  let demoTimers = [];
+  const clearTimers = () => { demoTimers.forEach(clearTimeout); demoTimers = []; };
+  function openDemo(){ const m=document.getElementById('demoModal'); m.classList.remove('hidden'); m.classList.add('flex'); }
   function closeDemo(){
-    if('speechSynthesis' in window) speechSynthesis.cancel();
+    demoAudio.pause(); demoAudio.currentTime = 0; clearTimers();
     document.getElementById('wave').classList.remove('playing');
     const m=document.getElementById('demoModal'); m.classList.add('hidden'); m.classList.remove('flex');
   }
-  function playDemo(){
-    demoI = 0;
-    document.getElementById('demoCaptions').innerHTML = '';
-    document.getElementById('demoStatus').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> On the call…';
-    const btn=document.getElementById('demoPlayBtn'); btn.disabled=true; btn.classList.add('opacity-60'); btn.textContent='● On the call…';
-    speakNext();
-  }
-  function speakNext(){
-    const wave=document.getElementById('wave'), btn=document.getElementById('demoPlayBtn');
-    if(demoI>=demoScript.length){
-      wave.classList.remove('playing');
-      document.getElementById('demoStatus').innerHTML='Call ended · appointment booked ✓';
-      btn.disabled=false; btn.classList.remove('opacity-60'); btn.textContent='▶ Replay the call';
-      return;
-    }
-    const line=demoScript[demoI], isMira=line.who==='mira';
-    const cap=document.getElementById('demoCaptions');
+  function renderCaption(line){
+    const cap=document.getElementById('demoCaptions'), isMira=line.who==='mira';
     cap.insertAdjacentHTML('beforeend', isMira
       ? `<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[88%]"><b class="text-brand-400">Mira:</b> ${line.text}</div>`
       : `<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[88%] ml-auto"><b class="text-white/70">Caller:</b> ${line.text}</div>`);
     cap.scrollTop=cap.scrollHeight;
-    wave.classList.add('playing');
-    if('speechSynthesis' in window){
-      const u=new SpeechSynthesisUtterance(line.text);
-      const v=chooseVoice(isMira); if(v) u.voice=v;
-      u.rate=1.02; u.pitch=isMira?1.1:0.9;
-      u.onend=()=>{ demoI++; setTimeout(speakNext,350); };
-      u.onerror=()=>{ demoI++; setTimeout(speakNext,350); };
-      speechSynthesis.speak(u);
-    } else {
-      setTimeout(()=>{ demoI++; speakNext(); }, 1900);
-    }
   }
+  function scheduleCaptions(){
+    const total = demoLines.reduce((s,l)=>s+l.text.length, 0);
+    const dur = (demoAudio.duration && isFinite(demoAudio.duration)) ? demoAudio.duration : 45;
+    let acc = 0;
+    demoLines.forEach(line => {
+      demoTimers.push(setTimeout(()=>renderCaption(line), (acc/total)*dur*1000));
+      acc += line.text.length;
+    });
+  }
+  function playDemo(){
+    clearTimers();
+    document.getElementById('demoCaptions').innerHTML = '';
+    document.getElementById('demoStatus').innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> On the call…';
+    const btn=document.getElementById('demoPlayBtn'); btn.disabled=true; btn.classList.add('opacity-60'); btn.textContent='● On the call…';
+    demoAudio.currentTime = 0;
+    const start = () => { document.getElementById('wave').classList.add('playing'); scheduleCaptions(); };
+    if (demoAudio.readyState >= 1) start(); else demoAudio.onloadedmetadata = start;
+    demoAudio.play().catch(()=>start());
+  }
+  document.getElementById('demoAudio').addEventListener('ended', () => {
+    document.getElementById('wave').classList.remove('playing');
+    document.getElementById('demoStatus').innerHTML = 'Call ended · appointment booked ✓';
+    const btn=document.getElementById('demoPlayBtn'); btn.disabled=false; btn.classList.remove('opacity-60'); btn.textContent='▶ Replay the real call';
+  });
 </script>
 </body>
 </html>

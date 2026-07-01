@@ -167,7 +167,7 @@
 </div>
 
 <script>
-  const calls=[
+  let calls=[
     {name:'Daniel Reyes', init:'DR', time:'9:42 AM', outcome:'Booked', oc:'green', len:'1:12', dur:'1:12',
       lines:[['mira','Thanks for calling Bright Smile Dental, this is Mira. How can I help?'],['caller','I\'d like to book a teeth cleaning this week.'],['mira','I have Thursday at 2 PM or Friday at 10 AM. Which works best?'],['caller','Friday at 10 works.'],['mira','Perfect. Can I get your name and callback number?'],['caller','Daniel, 555-0142.'],['mira','You\'re all set for Friday at 10 AM, Daniel. We\'ll text a reminder!']]},
     {name:'Sarah Lin', init:'SL', time:'9:15 AM', outcome:'Booked', oc:'green', len:'1:48', dur:'1:48',
@@ -180,14 +180,44 @@
       lines:[['mira','Bright Smile Dental, this is Mira.'],['caller','I have severe tooth pain, is this an emergency line?'],['mira','I\'m sorry to hear that. Let me transfer you to a team member right away.'],['system','— Call transferred to front desk —']]},
   ];
   const oc={green:'bg-green-500/15 text-green-400',amber:'bg-amber-500/15 text-amber-400',blue:'bg-blue-500/15 text-blue-300'};
-  document.getElementById('callRows').innerHTML=calls.map((c,i)=>`
-    <tr class="row cursor-pointer" onclick="openTranscript(${i})">
-      <td class="px-4 py-3"><div class="flex items-center gap-2.5"><span class="w-7 h-7 rounded-full bg-white/10 grid place-items-center text-xs font-semibold">${c.init}</span><span class="font-medium">${c.name}</span></div></td>
-      <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.time}</td>
-      <td class="px-4 py-3"><span class="badge ${oc[c.oc]}">${c.outcome}</span></td>
-      <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.len}</td>
-      <td class="px-4 py-3 text-white/30">›</td>
-    </tr>`).join('');
+  function renderRows(){
+    document.getElementById('callRows').innerHTML=calls.map((c,i)=>`
+      <tr class="row cursor-pointer" onclick="openTranscript(${i})">
+        <td class="px-4 py-3"><div class="flex items-center gap-2.5"><span class="w-7 h-7 rounded-full bg-white/10 grid place-items-center text-xs font-semibold">${c.init}</span><span class="font-medium">${c.name}</span></div></td>
+        <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.time}</td>
+        <td class="px-4 py-3"><span class="badge ${oc[c.oc]||oc.blue}">${c.outcome}</span></td>
+        <td class="px-4 py-3 text-white/50 hidden sm:table-cell">${c.len}</td>
+        <td class="px-4 py-3 text-white/30">›</td>
+      </tr>`).join('');
+  }
+  renderRows();
+
+  // ---- Dados REAIS da Vapi (quando rodando no servidor local). Fallback: mock. ----
+  const MIRA_ID='5296c969-3738-43fb-804d-24a8b617d5f4';
+  const initials=n=>(n||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  const ocFrom=o=>{o=(o||'').toLowerCase();return o.includes('book')?'green':o.includes('transfer')?'blue':(o.includes('question')||o.includes('callback'))?'amber':'blue';};
+  function parseTranscript(t){
+    if(!t) return [];
+    return t.split('\n').filter(Boolean).map(line=>{
+      const m=line.match(/^(AI|Assistant|Bot|User|Customer|Human)\s*:\s*(.*)$/i);
+      if(!m) return ['mira',line];
+      return [/user|customer|human/i.test(m[1])?'caller':'mira', m[2]];
+    });
+  }
+  function adaptReal(c){
+    const lines=parseTranscript(c.transcript);
+    return {name:c.name,init:initials(c.name),time:c.time||'—',outcome:c.outcome||'—',
+      oc:ocFrom(c.outcome),len:'—',dur:'—',
+      lines:lines.length?lines:(c.summary?[['mira',c.summary]]:[['system','— no transcript —']])};
+  }
+  (async()=>{
+    try{
+      const r=await fetch('/api/calls?assistantId='+MIRA_ID);
+      if(!r.ok) return;
+      const data=await r.json();
+      if(Array.isArray(data)&&data.length){ calls=data.map(adaptReal); renderRows(); }
+    }catch(e){/* github pages / offline: mantém o mock */}
+  })();
 
   function openTranscript(i){
     const c=calls[i];
