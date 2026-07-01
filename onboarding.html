@@ -60,19 +60,19 @@
     <p class="text-center text-white/60 mt-2">She'll use this to answer your customers.</p>
     <div class="mt-8 space-y-4">
       <div><label class="text-sm text-white/70">Business name</label>
-        <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="e.g. Bright Smile Dental"></div>
+        <input id="bizName" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="e.g. Bright Smile Dental"></div>
       <div class="grid md:grid-cols-2 gap-4">
         <div><label class="text-sm text-white/70">Current phone</label>
-          <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="(555) 000-0000"></div>
+          <input id="bizPhone" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="(555) 000-0000"></div>
         <div><label class="text-sm text-white/70">Address</label>
-          <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Street, city, state"></div>
+          <input id="bizAddress" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Street, city, state"></div>
       </div>
       <div><label class="text-sm text-white/70">Business hours</label>
-        <input class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Mon–Fri, 9am–6pm"></div>
+        <input id="bizHours" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Mon–Fri, 9am–6pm"></div>
       <div>
         <label class="text-sm text-white/70">Services & prices</label>
         <p class="text-xs text-white/40 mb-1">One per line. Mira quotes these to your customers.</p>
-        <textarea rows="4" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Cleaning — $120&#10;Whitening — $450&#10;New patient exam — free"></textarea>
+        <textarea id="bizServices" rows="4" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Cleaning — $120&#10;Whitening — $450&#10;New patient exam — free"></textarea>
       </div>
     </div>
   </section>
@@ -85,10 +85,10 @@
     <div class="mt-8">
       <div class="text-sm text-white/70 mb-2">Voice</div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="opt glass rounded-xl p-3 text-center sel" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Mira</div><div class="text-xs text-white/40">Warm female</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
-        <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
-        <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
-        <div class="opt glass rounded-xl p-3 text-center" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center sel" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Mira</div><div class="text-xs text-white/40">Warm female</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
       </div>
     </div>
 
@@ -190,10 +190,11 @@ Always confirm the caller's name and number before ending the call.</textarea>
     <p class="text-center text-white/60 mt-2">She'll call you right now. Love it? Start your 15 free days.</p>
 
     <div class="mt-8 glass rounded-2xl p-6 text-center">
-      <div class="text-sm text-white/70 mb-3">Enter your cell and Mira calls in seconds:</div>
+      <div id="signupStatus" class="text-sm mb-3 text-white/70">Setting up your Mira…</div>
+      <div class="text-sm text-white/70 mb-3">Enter your cell (with country code) and Mira calls in seconds:</div>
       <div class="flex flex-col sm:flex-row gap-3 max-w-sm mx-auto">
-        <input type="tel" placeholder="(555) 000-0000" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3">
-        <button onclick="alert('📞 Ringing... Mira is calling you! (demo)')" class="bg-brand-600 hover:bg-brand-700 px-5 py-3 rounded-xl font-semibold whitespace-nowrap">📞 Call me</button>
+        <input id="testPhone" type="tel" placeholder="+1 (555) 000-0000" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3">
+        <button onclick="callMe()" class="bg-brand-600 hover:bg-brand-700 px-5 py-3 rounded-xl font-semibold whitespace-nowrap">📞 Call me</button>
       </div>
     </div>
 
@@ -279,7 +280,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
       realestate:{tools:[{n:'Follow Up Boss',s:'deep'},{n:'Calendly',s:'deep'},{n:'ShowingTime',s:'lite'}]}
     }
   };
-  let selectedCat='generic';
+  let selectedCat='generic', selectedVoice='Savannah', createdAssistant=null, provisioning=false;
   function badge(s){
     return s==='deep' ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-green-500/15 text-green-400">⚡ Auto-sync</span>'
       : s==='calendar' ? '<span class="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-blue-500/15 text-blue-300">Calendar sync</span>'
@@ -309,13 +310,57 @@ Always confirm the caller's name and number before ending the call.</textarea>
     document.getElementById('back').classList.toggle('invisible',step===1);
     document.getElementById('next').textContent = step===total ? 'Finish' : 'Continue →';
     if(step===4) renderIntegrations();
+    if(step===7) provisionBusiness();
     window.scrollTo({top:0,behavior:'smooth'});
   }
   function go(d){ if(step===total&&d>0){alert('🎉 All set! (demo)');return;} step=Math.min(total,Math.max(1,step+d)); render(); }
   function pickCat(el,key){selectedCat=key||'generic';document.querySelectorAll('#catGrid .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');setTimeout(()=>go(1),250);}
-  function pickVoice(el){el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+  function pickVoice(el){selectedVoice=el.dataset.voice||'Savannah';el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
   function connect(el){el.classList.add('sel');el.querySelector('span:last-child').textContent='✓ Connected';}
   function toggleCh(el){const on=el.classList.toggle('sel');const c=el.querySelector('.check');c.textContent=on?'●':'○';c.className='check text-xl '+(on?'text-brand-400':'text-white/20');}
+
+  // ---- Real sign-up: provision the assistant + live test call (works on the local server) ----
+  function parseServices(text){
+    return (text||'').split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+      let m=l.split(/\s*[—:–]\s*/);
+      if(m.length>=2) return {name:m[0], price:m.slice(1).join(' ')};
+      let d=l.indexOf('$');
+      if(d>0) return {name:l.slice(0,d).replace(/[-–]\s*$/,'').trim(), price:l.slice(d).trim()};
+      return {name:l, price:'(ask)'};
+    });
+  }
+  function gatherConfig(){
+    const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
+    return {category:selectedCat, agent_name:'Mira', language:'en',
+      name:v('bizName')||'My Test Business', address:v('bizAddress'),
+      hours:v('bizHours')||'Mon–Fri 9am–6pm', voice:selectedVoice||'Savannah',
+      services:parseServices(v('bizServices'))};
+  }
+  async function provisionBusiness(){
+    if(createdAssistant||provisioning) return;
+    provisioning=true;
+    const st=document.getElementById('signupStatus'), cfg=gatherConfig();
+    st.innerHTML='<span class="text-white/50">Creating your Mira…</span>';
+    try{
+      const r=await fetch('/api/provision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
+      const d=await r.json();
+      if(d.ok){ createdAssistant=cfg.name+' — Mira';
+        st.innerHTML='<span class="text-green-400">✓ Your Mira is live for <b>'+cfg.name+'</b>! Try the test call below.</span>'; }
+      else st.innerHTML='<span class="text-amber-300">'+(d.error||'Could not create')+'</span>';
+    }catch(e){ st.innerHTML='<span class="text-amber-300">Demo preview — real sign-up runs on the local server (localhost:8788).</span>'; }
+    provisioning=false;
+  }
+  async function callMe(){
+    const to=(document.getElementById('testPhone')||{}).value, st=document.getElementById('signupStatus');
+    if(!to){ alert('Enter your phone number first (e.g. +19545550142).'); return; }
+    if(!createdAssistant){ await provisionBusiness(); }
+    st.innerHTML='<span class="text-white/50">📞 Calling '+to+'…</span>';
+    try{
+      const r=await fetch('/api/test-call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:to, assistant:createdAssistant})});
+      const d=await r.json();
+      st.innerHTML = d.ok ? '<span class="text-green-400">📞 Mira is calling you now — pick up!</span>' : '<span class="text-amber-300">'+(d.error||'Could not place call')+'</span>';
+    }catch(e){ st.innerHTML='<span class="text-amber-300">Live calling works on the local server (localhost:8788).</span>'; }
+  }
 </script>
 </body>
 </html>
