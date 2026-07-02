@@ -201,6 +201,19 @@ Always confirm the caller's name and number before ending the call.</textarea>
           </section>
 
           <section class="glass rounded-2xl p-6">
+            <h2 class="font-bold mb-4">Smart features</h2>
+            <div class="grid sm:grid-cols-2 gap-2.5">
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span class="text-sm">🌎 Bilingual (EN/ES)</span><span class="check text-brand-400">●</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span class="text-sm">↩️ Missed-call text-back</span><span class="check text-brand-400">●</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span class="text-sm">⏰ Appointment reminders</span><span class="check text-brand-400">●</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between sel" onclick="toggleCh(this)"><span class="text-sm">🛡️ Spam call filter</span><span class="check text-brand-400">●</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span class="text-sm">⭐ Google review requests</span><span class="check text-white/20">○</span></div>
+              <div class="opt glass rounded-xl p-3 flex items-center justify-between" onclick="toggleCh(this)"><span class="text-sm">🌙 After-hours only</span><span class="check text-white/20">○</span></div>
+            </div>
+            <button onclick="saved(this)" class="mt-4 bg-brand-600 hover:bg-brand-700 px-5 py-2.5 rounded-lg font-semibold text-sm">Save</button>
+          </section>
+
+          <section class="glass rounded-2xl p-6">
             <h2 class="font-bold mb-4">Plan &amp; billing</h2>
             <div class="flex items-center justify-between">
               <div><div class="font-semibold">Free trial <span class="badge bg-brand-500/20 text-brand-200 ml-1">11 days left</span></div><div class="text-xs text-white/40 mt-0.5">First charge Jul 15 · Starter $249/mo</div></div>
