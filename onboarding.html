@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Set up your receptionist · Mira</title>
+<title>Set up your receptionist · Vocari</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
   tailwind.config={theme:{extend:{colors:{brand:{50:'#eef2ff',400:'#818cf8',500:'#6366f1',600:'#4f46e5',700:'#4338ca'}}}}}
@@ -34,9 +34,9 @@
           <rect x="17" y="6" width="2.6" height="12" rx="1.3" fill="white" opacity=".85"/>
           <rect x="22" y="9" width="2.6" height="6" rx="1.3" fill="white" opacity=".7"/>
         </svg>
-      </span> Mira
+      </span> Vocari
     </a>
-    <div class="text-sm text-white/50">Need help? <a href="mailto:hello@trymira.ai" class="text-brand-400">Chat with us</a></div>
+    <div class="text-sm text-white/50">Need help? <a href="mailto:hello@getvocari.com" class="text-brand-400">Chat with us</a></div>
   </div>
   <div class="h-1 bg-white/10"><div id="bar" class="h-1 bg-brand-500 transition-all" style="width:16%"></div></div>
 </header>
@@ -56,7 +56,7 @@
 
   <!-- STEP 2: DETAILS -->
   <section class="step" data-step="2">
-    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Tell Mira about your business</h1>
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Tell Vocari about your business</h1>
     <p class="text-center text-white/60 mt-2">She'll use this to answer your customers.</p>
     <div class="mt-8 space-y-4">
       <div class="grid md:grid-cols-2 gap-4">
@@ -77,11 +77,11 @@
         <input id="bizHours" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Mon–Fri, 9am–6pm"></div>
       <div>
         <label class="text-sm text-white/70">Services & prices</label>
-        <p class="text-xs text-white/40 mb-1">One per line. Mira quotes these to your customers.</p>
+        <p class="text-xs text-white/40 mb-1">One per line. Vocari quotes these to your customers.</p>
         <textarea id="bizServices" rows="4" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Cleaning — $120&#10;Whitening — $450&#10;New patient exam — free"></textarea>
       </div>
       <div><label class="text-sm text-white/70">Your website <span class="text-white/40">(optional)</span></label>
-        <p class="text-xs text-white/40 mb-1">Mira reads it to learn your FAQs, hours, and services.</p>
+        <p class="text-xs text-white/40 mb-1">Vocari reads it to learn your FAQs, hours, and services.</p>
         <input id="bizWebsite" type="url" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="https://yourbusiness.com"></div>
     </div>
   </section>
@@ -94,7 +94,7 @@
     <div class="mt-8">
       <div class="text-sm text-white/70 mb-2">Voice</div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="opt glass rounded-xl p-3 text-center sel" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Mira</div><div class="text-xs text-white/40">Warm female</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center sel" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Vocari</div><div class="text-xs text-white/40">Warm female</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
         <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
         <div class="opt glass rounded-xl p-3 text-center" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
         <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
@@ -133,14 +133,14 @@ Always confirm the caller's name and number before ending the call.</textarea>
   <!-- STEP 4: INTEGRATIONS -->
   <section class="step" data-step="4">
     <h1 class="text-2xl md:text-3xl font-extrabold text-center">Connect your software</h1>
-    <p class="text-center text-white/60 mt-2">Pick what you already use — Mira reads your availability and books for you, automatically.</p>
+    <p class="text-center text-white/60 mt-2">Pick what you already use — Vocari reads your availability and books for you, automatically.</p>
     <div id="integrationList" class="mt-8 space-y-2.5"></div>
     <p class="text-center text-white/40 text-xs mt-4">Don't see yours? Any tool with a calendar works — pick "Something else" and we'll bridge it.</p>
   </section>
 
   <!-- STEP 5: CHANNELS -->
   <section class="step" data-step="5">
-    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Where should Mira answer?</h1>
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Where should Vocari answer?</h1>
     <p class="text-center text-white/60 mt-2">Turn on the channels you use. You can change this later.</p>
     <div class="mt-8 space-y-3">
       <div class="opt glass rounded-xl p-4 flex items-center justify-between sel" onclick="toggleCh(this)">
@@ -170,7 +170,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
   <!-- STEP 6: NOTIFICATIONS -->
   <section class="step" data-step="6">
     <h1 class="text-2xl md:text-3xl font-extrabold text-center">Stay in the loop — your way</h1>
-    <p class="text-center text-white/60 mt-2">How should Mira keep you posted? Smart defaults are set — just tweak if you want.</p>
+    <p class="text-center text-white/60 mt-2">How should Vocari keep you posted? Smart defaults are set — just tweak if you want.</p>
 
     <!-- instant alerts -->
     <div class="mt-8">
@@ -213,12 +213,12 @@ Always confirm the caller's name and number before ending the call.</textarea>
 
   <!-- STEP 7: TEST + PAY -->
   <section class="step" data-step="7">
-    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Almost there — test Mira! 🎉</h1>
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Almost there — test Vocari! 🎉</h1>
     <p class="text-center text-white/60 mt-2">She'll call you right now. Love it? Start your 15 free days.</p>
 
     <div class="mt-8 glass rounded-2xl p-6 text-center">
-      <div id="signupStatus" class="text-sm mb-3 text-white/70">Setting up your Mira…</div>
-      <div class="text-sm text-white/70 mb-3">Confirm your cell — we text a 6-digit code, then Mira calls you:</div>
+      <div id="signupStatus" class="text-sm mb-3 text-white/70">Setting up your Vocari…</div>
+      <div class="text-sm text-white/70 mb-3">Confirm your cell — we text a 6-digit code, then Vocari calls you:</div>
       <div class="flex gap-3 max-w-sm mx-auto">
         <input id="testPhone" type="tel" placeholder="+1 (555) 000-0000" class="flex-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3">
         <button id="btnSendCode" onclick="sendCode()" class="bg-white/10 hover:bg-white/15 px-4 py-3 rounded-xl font-semibold whitespace-nowrap">Send code</button>
@@ -229,7 +229,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
       </div>
       <label class="flex items-start gap-2 text-xs text-white/50 mt-3 text-left max-w-sm mx-auto">
         <input id="smsConsent" type="checkbox" class="mt-0.5 shrink-0">
-        <span>I agree to receive account &amp; appointment text messages from Mira at this number. Msg &amp; data rates may apply. Reply STOP to unsubscribe, HELP for help.</span>
+        <span>I agree to receive account &amp; appointment text messages from Vocari at this number. Msg &amp; data rates may apply. Reply STOP to unsubscribe, HELP for help.</span>
       </label>
       <button id="btnCallMe" onclick="callMe()" disabled class="mt-4 bg-brand-600 hover:bg-brand-700 px-6 py-3 rounded-xl font-semibold opacity-50 cursor-not-allowed">📞 Call me now</button>
     </div>
@@ -251,7 +251,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
       </div>
       <label class="flex items-start gap-2 text-xs text-white/50 mt-4 text-left">
         <input id="agreeTerms" type="checkbox" class="mt-0.5 shrink-0">
-        <span>I agree to Mira's <a href="terms.html" target="_blank" class="text-brand-400 underline">Terms</a>, <a href="privacy-policy.html" target="_blank" class="text-brand-400 underline">Privacy Policy</a>, and <a href="sms-terms.html" target="_blank" class="text-brand-400 underline">SMS Terms</a>, and I confirm I have consent to contact my own customers by call and text.</span>
+        <span>I agree to Vocari's <a href="terms.html" target="_blank" class="text-brand-400 underline">Terms</a>, <a href="privacy-policy.html" target="_blank" class="text-brand-400 underline">Privacy Policy</a>, and <a href="sms-terms.html" target="_blank" class="text-brand-400 underline">SMS Terms</a>, and I confirm I have consent to contact my own customers by call and text.</span>
       </label>
       <button onclick="activate()" class="w-full mt-3 bg-gradient-to-r from-brand-600 to-fuchsia-600 hover:opacity-90 py-3.5 rounded-xl font-bold">
         Start my 15 free days →
@@ -373,7 +373,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
   function gatherConfig(){
     const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
     const chk=id=>{const e=document.getElementById(id);return e?e.checked:false;};
-    return {category:selectedCat, agent_name:'Mira',
+    return {category:selectedCat, agent_name:'Vocari',
       language:v('bizLang')||'en',
       owner_name:v('ownerName'), owner_email:v('ownerEmail'),
       name:v('bizName')||'My Test Business', address:v('bizAddress'),
@@ -386,12 +386,12 @@ Always confirm the caller's name and number before ending the call.</textarea>
     if(createdAssistant||provisioning) return;
     provisioning=true;
     const st=document.getElementById('signupStatus'), cfg=gatherConfig();
-    st.innerHTML='<span class="text-white/50">Creating your Mira…</span>';
+    st.innerHTML='<span class="text-white/50">Creating your Vocari…</span>';
     try{
       const r=await fetch('/api/provision',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
       const d=await r.json();
-      if(d.ok){ createdAssistant=cfg.name+' — Mira';
-        st.innerHTML='<span class="text-green-400">✓ Your Mira is live for <b>'+cfg.name+'</b>! Try the test call below.</span>'; }
+      if(d.ok){ createdAssistant=cfg.name+' — Vocari';
+        st.innerHTML='<span class="text-green-400">✓ Your Vocari is live for <b>'+cfg.name+'</b>! Try the test call below.</span>'; }
       else st.innerHTML='<span class="text-amber-300">'+(d.error||'Could not create')+'</span>';
     }catch(e){ st.innerHTML='<span class="text-amber-300">Demo preview — real sign-up runs on the local server (localhost:8788).</span>'; }
     provisioning=false;
@@ -405,7 +405,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
     try{
       const r=await fetch('/api/test-call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:to, assistant:createdAssistant})});
       const d=await r.json();
-      st.innerHTML = d.ok ? '<span class="text-green-400">📞 Mira is calling you now — pick up!</span>' : '<span class="text-amber-300">'+(d.error||'Could not place call')+'</span>';
+      st.innerHTML = d.ok ? '<span class="text-green-400">📞 Vocari is calling you now — pick up!</span>' : '<span class="text-amber-300">'+(d.error||'Could not place call')+'</span>';
     }catch(e){ st.innerHTML='<span class="text-amber-300">Live calling works on the local server (localhost:8788).</span>'; }
   }
   async function sendCode(){
@@ -435,7 +435,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
     const email=(document.getElementById('ownerEmail')||{}).value;
     if(!email){ alert('Please add your email in step 2 first — we need it for your account.'); return; }
     if(!document.getElementById('agreeTerms').checked){ alert('Please accept the Terms & Privacy to continue.'); return; }
-    alert('🎉 Activated! Mira is now live for your business. (demo — Stripe billing goes here)');
+    alert('🎉 Activated! Vocari is now live for your business. (demo — Stripe billing goes here)');
   }
 </script>
 </body>
