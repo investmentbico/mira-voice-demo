@@ -400,13 +400,13 @@
 
   // ---- Live demo call — plays a REAL recorded Vapi call (two AI agents) ----
   const demoLines = [
-    {who:'mira',   text:"Thank you for calling Bright Smile Dental. This is Vocari. How can I help you today?"},
+    {who:'vocari',   text:"Thank you for calling Bright Smile Dental. This is Vocari. How can I help you today?"},
     {who:'caller', text:"Hey, yeah — I was hoping to book a teeth cleaning appointment sometime this week, if you have anything open."},
-    {who:'mira',   text:"Absolutely, I can help with that. I can offer you Wednesday at 10 AM or Thursday at 2 PM. Would either of those work?"},
+    {who:'vocari',   text:"Absolutely, I can help with that. I can offer you Wednesday at 10 AM or Thursday at 2 PM. Would either of those work?"},
     {who:'caller', text:"Oh, Thursday at 2 PM sounds good, I'll take that one. Also — how much do you charge for teeth whitening?"},
-    {who:'mira',   text:"Got you down for Thursday at 2 PM. Whitening is $450, but we always do a free consult first. Could I get your name and a good callback number?"},
+    {who:'vocari',   text:"Got you down for Thursday at 2 PM. Whitening is $450, but we always do a free consult first. Could I get your name and a good callback number?"},
     {who:'caller', text:"Sure thing — my name is Daniel, and my number is 555-0142."},
-    {who:'mira',   text:"Thanks, Daniel! You're booked for a cleaning Thursday at 2 PM. Looking forward to seeing you!"},
+    {who:'vocari',   text:"Thanks, Daniel! You're booked for a cleaning Thursday at 2 PM. Looking forward to seeing you!"},
     {who:'caller', text:"Awesome, thanks so much. See you Thursday — have a great day, bye!"},
   ];
   const demoAudio = document.getElementById('demoAudio');
@@ -419,7 +419,7 @@
     const m=document.getElementById('demoModal'); m.classList.add('hidden'); m.classList.remove('flex');
   }
   function renderCaption(line){
-    const cap=document.getElementById('demoCaptions'), isVocari=line.who==='mira';
+    const cap=document.getElementById('demoCaptions'), isVocari=line.who==='vocari';
     cap.insertAdjacentHTML('beforeend', isVocari
       ? `<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[88%]"><b class="text-brand-400">Vocari:</b> ${line.text}</div>`
       : `<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[88%] ml-auto"><b class="text-white/70">Caller:</b> ${line.text}</div>`);

@@ -269,15 +269,15 @@ Always confirm the caller's name and number before ending the call.</textarea>
   // ---------- data ----------
   let calls=[
     {name:'Daniel Reyes',init:'DR',time:'9:42 AM',outcome:'Booked',oc:'green',len:'1:12',dur:'1:12',phone:'(305) 555-0142',
-      lines:[['mira','Thanks for calling Bright Smile Dental, this is Vocari. How can I help?'],['caller','I\'d like to book a teeth cleaning this week.'],['mira','I have Thursday at 2 PM or Friday at 10 AM. Which works best?'],['caller','Friday at 10 works.'],['mira','Perfect. Can I get your name and callback number?'],['caller','Daniel, 305-555-0142.'],['mira','You\'re all set for Friday at 10 AM, Daniel. We\'ll text a reminder!']]},
+      lines:[['vocari','Thanks for calling Bright Smile Dental, this is Vocari. How can I help?'],['caller','I\'d like to book a teeth cleaning this week.'],['vocari','I have Thursday at 2 PM or Friday at 10 AM. Which works best?'],['caller','Friday at 10 works.'],['vocari','Perfect. Can I get your name and callback number?'],['caller','Daniel, 305-555-0142.'],['vocari','You\'re all set for Friday at 10 AM, Daniel. We\'ll text a reminder!']]},
     {name:'Sarah Lin',init:'SL',time:'9:15 AM',outcome:'Booked',oc:'green',len:'1:48',dur:'1:48',phone:'(305) 555-0188',
-      lines:[['mira','Bright Smile Dental, this is Vocari!'],['caller','Do you take new patients?'],['mira','We do! I can book a new patient exam — it\'s free. Does tomorrow 11:30 AM work?'],['caller','Yes, perfect.'],['mira','Great, you\'re booked. What name should I put it under?'],['caller','Sarah Lin.'],['mira','All set, Sarah. See you tomorrow at 11:30!']]},
+      lines:[['vocari','Bright Smile Dental, this is Vocari!'],['caller','Do you take new patients?'],['vocari','We do! I can book a new patient exam — it\'s free. Does tomorrow 11:30 AM work?'],['caller','Yes, perfect.'],['vocari','Great, you\'re booked. What name should I put it under?'],['caller','Sarah Lin.'],['vocari','All set, Sarah. See you tomorrow at 11:30!']]},
     {name:'Unknown',init:'?',time:'8:51 AM',outcome:'Question',oc:'amber',len:'0:46',dur:'0:46',phone:'(786) 555-0121',
-      lines:[['mira','Bright Smile Dental, this is Vocari. How can I help?'],['caller','How much is teeth whitening?'],['mira','Whitening is $450, and we offer a free consult first. Would you like to book the consult?'],['caller','I\'ll think about it, thanks.'],['mira','Of course! Call back anytime. Have a great day.']]},
+      lines:[['vocari','Bright Smile Dental, this is Vocari. How can I help?'],['caller','How much is teeth whitening?'],['vocari','Whitening is $450, and we offer a free consult first. Would you like to book the consult?'],['caller','I\'ll think about it, thanks.'],['vocari','Of course! Call back anytime. Have a great day.']]},
     {name:'Marcus Webb',init:'MW',time:'8:30 AM',outcome:'Booked',oc:'green',len:'2:03',dur:'2:03',phone:'(305) 555-0199',
-      lines:[['mira','Good morning, Bright Smile Dental!'],['caller','I want to talk about whitening options.'],['mira','Happy to help. I can set a whitening consult for today at 2 PM — sound good?'],['caller','Works for me.'],['mira','Booked! Your name and number?'],['caller','Marcus Webb, 305-555-0199.'],['mira','See you at 2, Marcus!']]},
+      lines:[['vocari','Good morning, Bright Smile Dental!'],['caller','I want to talk about whitening options.'],['vocari','Happy to help. I can set a whitening consult for today at 2 PM — sound good?'],['caller','Works for me.'],['vocari','Booked! Your name and number?'],['caller','Marcus Webb, 305-555-0199.'],['vocari','See you at 2, Marcus!']]},
     {name:'Olivia Grant',init:'OG',time:'Yesterday',outcome:'Transferred',oc:'blue',len:'0:38',dur:'0:38',phone:'(954) 555-0177',
-      lines:[['mira','Bright Smile Dental, this is Vocari.'],['caller','I have severe tooth pain, is this an emergency line?'],['mira','I\'m sorry to hear that. Let me transfer you to a team member right away.'],['system','— Call transferred to front desk —']]},
+      lines:[['vocari','Bright Smile Dental, this is Vocari.'],['caller','I have severe tooth pain, is this an emergency line?'],['vocari','I\'m sorry to hear that. Let me transfer you to a team member right away.'],['system','— Call transferred to front desk —']]},
   ];
   const appts=[
     {day:'Today · Monday, Jun 30',items:[['10:00 AM','Daniel Reyes','Teeth cleaning'],['11:30 AM','Sarah Lin','New patient exam'],['2:00 PM','Marcus Webb','Whitening consult'],['4:15 PM','Olivia Grant','Cleaning']]},
@@ -331,7 +331,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
     const c=calls[i];
     document.getElementById('trMeta').innerHTML=`<div class="font-semibold">${c.name}</div><div class="text-white/40 text-xs mt-0.5">${c.time} · ${c.len} · <span class="${(oc[c.oc]||oc.blue).split(' ')[1]}">${c.outcome}</span></div>`;
     document.getElementById('trDur').textContent=c.dur;
-    document.getElementById('trBody').innerHTML=c.lines.map(l=>l[0]==='system'?`<div class="text-center text-xs text-white/40 py-1">${l[1]}</div>`:(l[0]==='mira'?`<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[90%]"><b class="text-brand-400">Vocari:</b> ${l[1]}</div>`:`<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[90%] ml-auto">${l[1]}</div>`)).join('');
+    document.getElementById('trBody').innerHTML=c.lines.map(l=>l[0]==='system'?`<div class="text-center text-xs text-white/40 py-1">${l[1]}</div>`:(l[0]==='vocari'?`<div class="bg-white/5 rounded-xl rounded-tl-sm px-3 py-2 max-w-[90%]"><b class="text-brand-400">Vocari:</b> ${l[1]}</div>`:`<div class="bg-brand-600 rounded-xl rounded-tr-sm px-3 py-2 max-w-[90%] ml-auto">${l[1]}</div>`)).join('');
     document.getElementById('transcriptPanel').classList.remove('hidden');
   }
   function closeTranscript(){document.getElementById('transcriptPanel').classList.add('hidden');}
@@ -360,12 +360,12 @@ Always confirm the caller's name and number before ending the call.</textarea>
   const MIRA_ID='5296c969-3738-43fb-804d-24a8b617d5f4';
   const initials=n=>(n||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
   const ocFrom=o=>{o=(o||'').toLowerCase();return o.includes('book')?'green':o.includes('transfer')?'blue':(o.includes('question')||o.includes('callback'))?'amber':'blue';};
-  function parseT(t){return !t?[]:t.split('\n').filter(Boolean).map(line=>{const m=line.match(/^(AI|Assistant|Bot|User|Customer|Human)\s*:\s*(.*)$/i);return !m?['mira',line]:[/user|customer|human/i.test(m[1])?'caller':'mira',m[2]];});}
+  function parseT(t){return !t?[]:t.split('\n').filter(Boolean).map(line=>{const m=line.match(/^(AI|Assistant|Bot|User|Customer|Human)\s*:\s*(.*)$/i);return !m?['vocari',line]:[/user|customer|human/i.test(m[1])?'caller':'vocari',m[2]];});}
   (async()=>{try{
     const r=await fetch('/api/calls?assistantId='+MIRA_ID); if(!r.ok)return;
     const data=await r.json();
     if(Array.isArray(data)&&data.length){
-      calls=data.map(c=>({name:c.name||'Unknown',init:initials(c.name),time:c.time||'—',outcome:(c.outcome||'—'),oc:ocFrom(c.outcome),len:'—',dur:'—',phone:'—',lines:parseT(c.transcript).length?parseT(c.transcript):[['mira',c.summary||'(no transcript)']]}));
+      calls=data.map(c=>({name:c.name||'Unknown',init:initials(c.name),time:c.time||'—',outcome:(c.outcome||'—'),oc:ocFrom(c.outcome),len:'—',dur:'—',phone:'—',lines:parseT(c.transcript).length?parseT(c.transcript):[['vocari',c.summary||'(no transcript)']]}));
       renderTables('all'); renderCustomers();
     }
   }catch(e){}})();
