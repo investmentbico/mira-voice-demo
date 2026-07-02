@@ -369,17 +369,14 @@ Always confirm the caller's name and number before ending the call.</textarea>
   function go(d){ if(step===total&&d>0){alert('🎉 All set! (demo)');return;} step=Math.min(total,Math.max(1,step+d)); render(); }
   function pickCat(el,key){selectedCat=key||'generic';document.querySelectorAll('#catGrid .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');setTimeout(()=>go(1),250);}
   function pickVoice(el){selectedVoice=el.dataset.voice||'Savannah';el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
-  function playVoiceSample(g,pitch){
-    if(!('speechSynthesis' in window)){ alert('Voice preview needs a modern browser.'); return; }
-    speechSynthesis.cancel();
-    const u=new SpeechSynthesisUtterance('Hi! Thanks for calling. How can I help you today?');
-    const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
-    if(vs.length){
-      const f=vs.find(v=>/female|samantha|victoria|zira|karen|aria|susan|google us english/i.test(v.name));
-      const m=vs.find(v=>/male|daniel|alex|fred|guy|david/i.test(v.name));
-      u.voice = g==='f' ? (f||vs[0]) : (m||vs[1]||vs[0]);
-    }
-    u.pitch=pitch; u.rate=1.02; speechSynthesis.speak(u);
+  // preview com VOZ HUMANA REAL (clipes da gravação Vapi), não a voz robótica do navegador
+  function playVoiceSample(g){
+    try{
+      if(!window._vs) window._vs=new Audio();
+      window._vs.pause();
+      window._vs.src = (g==='m') ? 'audio/voice-male.mp3' : 'audio/voice-female.mp3';
+      window._vs.currentTime=0; window._vs.play();
+    }catch(e){}
   }
   function niceErr(e){ return e==='unauthorized' ? 'Live setup activates when you finish sign-up. (Ask us for a test call anytime.)' : (e||'Something went wrong'); }
   if('speechSynthesis' in window){ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged=function(){}; }
