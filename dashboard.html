@@ -347,6 +347,15 @@ Always confirm the caller's name and number before ending the call.</textarea>
   // ---------- init ----------
   renderTables('all'); renderAppts(); renderIntegrations();
 
+  // boas-vindas após o checkout da Stripe
+  if(location.search.indexOf('welcome=1')>=0){
+    const v=document.getElementById('view-dashboard');
+    if(v){ const b=document.createElement('div');
+      b.className='bg-green-500/15 border border-green-500/30 text-green-300 text-sm px-4 py-3 rounded-xl mb-5';
+      b.innerHTML='🎉 <b>Welcome to Vocari!</b> Your 15-day free trial is active — your card won\'t be charged until day 15. This is your dashboard.';
+      v.insertBefore(b, v.firstChild); }
+  }
+
   // real Vapi data when running on the server (fallback: mock)
   const MIRA_ID='5296c969-3738-43fb-804d-24a8b617d5f4';
   const initials=n=>(n||'?').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
