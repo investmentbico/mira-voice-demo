@@ -328,6 +328,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
     document.getElementById('stepNum').textContent=step;
     document.getElementById('back').classList.toggle('invisible',step===1);
     document.getElementById('next').textContent = step===total ? 'Finish' : 'Continue →';
+    document.getElementById('next').classList.toggle('hidden', step===total);
     if(step===4) renderIntegrations();
     if(step===7) provisionBusiness();
     window.scrollTo({top:0,behavior:'smooth'});
