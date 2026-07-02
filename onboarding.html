@@ -96,10 +96,10 @@
     <div class="mt-8">
       <div class="text-sm text-white/70 mb-2">Voice</div>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <div class="opt glass rounded-xl p-3 text-center sel" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Vocari</div><div class="text-xs text-white/40">Warm female</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
-        <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
-        <div class="opt glass rounded-xl p-3 text-center" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
-        <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div><button class="text-xs text-brand-400 mt-1">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center sel" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Vocari</div><div class="text-xs text-white/40">Warm female</div><button onclick="event.stopPropagation();playVoiceSample('f',1.12)" class="text-xs text-brand-400 mt-1 hover:underline">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">James</div><div class="text-xs text-white/40">Male</div><button onclick="event.stopPropagation();playVoiceSample('m',0.85)" class="text-xs text-brand-400 mt-1 hover:underline">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" data-voice="Savannah" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">Ava</div><div class="text-xs text-white/40">Young</div><button onclick="event.stopPropagation();playVoiceSample('f',1.3)" class="text-xs text-brand-400 mt-1 hover:underline">▶ play</button></div>
+        <div class="opt glass rounded-xl p-3 text-center" data-voice="Elliot" onclick="pickVoice(this)">🗣️<div class="text-sm mt-1">David</div><div class="text-xs text-white/40">Calm</div><button onclick="event.stopPropagation();playVoiceSample('m',0.95)" class="text-xs text-brand-400 mt-1 hover:underline">▶ play</button></div>
       </div>
     </div>
 
@@ -215,7 +215,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
 
   <!-- STEP 7: TEST + PAY -->
   <section class="step" data-step="7">
-    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Almost there — test Vocari! 🎉</h1>
+    <h1 class="text-2xl md:text-3xl font-extrabold text-center">Almost there — Test Vocari! 🎉</h1>
     <p class="text-center text-white/60 mt-2">She'll call you right now. Love it? Start your 15 free days.</p>
 
     <div class="mt-8 glass rounded-2xl p-6 text-center">
@@ -359,6 +359,20 @@ Always confirm the caller's name and number before ending the call.</textarea>
   function go(d){ if(step===total&&d>0){alert('🎉 All set! (demo)');return;} step=Math.min(total,Math.max(1,step+d)); render(); }
   function pickCat(el,key){selectedCat=key||'generic';document.querySelectorAll('#catGrid .opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');setTimeout(()=>go(1),250);}
   function pickVoice(el){selectedVoice=el.dataset.voice||'Savannah';el.parentElement.querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));el.classList.add('sel');}
+  function playVoiceSample(g,pitch){
+    if(!('speechSynthesis' in window)){ alert('Voice preview needs a modern browser.'); return; }
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance('Hi! Thanks for calling. How can I help you today?');
+    const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));
+    if(vs.length){
+      const f=vs.find(v=>/female|samantha|victoria|zira|karen|aria|susan|google us english/i.test(v.name));
+      const m=vs.find(v=>/male|daniel|alex|fred|guy|david/i.test(v.name));
+      u.voice = g==='f' ? (f||vs[0]) : (m||vs[1]||vs[0]);
+    }
+    u.pitch=pitch; u.rate=1.02; speechSynthesis.speak(u);
+  }
+  function niceErr(e){ return e==='unauthorized' ? 'Live setup activates when you finish sign-up. (Ask us for a test call anytime.)' : (e||'Something went wrong'); }
+  if('speechSynthesis' in window){ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged=function(){}; }
   function connect(el){el.classList.add('sel');el.querySelector('span:last-child').textContent='✓ Connected';}
   function toggleCh(el){const on=el.classList.toggle('sel');const c=el.querySelector('.check');c.textContent=on?'●':'○';c.className='check text-xl '+(on?'text-brand-400':'text-white/20');}
 
@@ -394,7 +408,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
       const d=await r.json();
       if(d.ok){ createdAssistant=cfg.name+' — Vocari';
         st.innerHTML='<span class="text-green-400">✓ Your Vocari is live for <b>'+cfg.name+'</b>! Try the test call below.</span>'; }
-      else st.innerHTML='<span class="text-amber-300">'+(d.error||'Could not create')+'</span>';
+      else st.innerHTML='<span class="text-brand-300">✨ Preview ready — the steps below go live once you finish sign-up.</span>';
     }catch(e){ st.innerHTML='<span class="text-amber-300">Demo preview — real sign-up runs on the local server (localhost:8788).</span>'; }
     provisioning=false;
   }
@@ -407,7 +421,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
     try{
       const r=await fetch('/api/test-call',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:to, assistant:createdAssistant})});
       const d=await r.json();
-      st.innerHTML = d.ok ? '<span class="text-green-400">📞 Vocari is calling you now — pick up!</span>' : '<span class="text-amber-300">'+(d.error||'Could not place call')+'</span>';
+      st.innerHTML = d.ok ? '<span class="text-green-400">📞 Vocari is calling you now — pick up!</span>' : '<span class="text-amber-300">'+niceErr(d.error)+'</span>';
     }catch(e){ st.innerHTML='<span class="text-amber-300">Live calling works on the local server (localhost:8788).</span>'; }
   }
   async function sendCode(){
@@ -419,7 +433,7 @@ Always confirm the caller's name and number before ending the call.</textarea>
       const r=await fetch('/api/send-otp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to})});
       const d=await r.json();
       if(d.ok){ const cb=document.getElementById('codeBox'); cb.classList.remove('hidden'); cb.classList.add('flex'); st.innerHTML='<span class="text-green-400">✓ Code sent — enter the 6 digits below.</span>'; }
-      else st.innerHTML='<span class="text-amber-300">'+(d.error||'Could not send code')+'</span>';
+      else st.innerHTML='<span class="text-amber-300">'+niceErr(d.error)+'</span>';
     }catch(e){ st.innerHTML='<span class="text-amber-300">Verification runs on the local server (localhost:8788).</span>'; }
   }
   async function verifyCode(){
