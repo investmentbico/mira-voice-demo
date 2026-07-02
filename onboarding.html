@@ -69,11 +69,21 @@
       </div>
       <div><label class="text-sm text-white/70">Business name</label>
         <input id="bizName" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="e.g. Bright Smile Dental"></div>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div><label class="text-sm text-white/70">Current phone</label>
-          <input id="bizPhone" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="(555) 000-0000"></div>
-        <div><label class="text-sm text-white/70">Address</label>
-          <input id="bizAddress" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Street, city, state"></div>
+      <div><label class="text-sm text-white/70">Current phone</label>
+        <input id="bizPhone" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="(555) 000-0000"></div>
+      <div><label class="text-sm text-white/70">Street address</label>
+        <input id="bizStreet" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="123 Main St"></div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-sm text-white/70">Suite / Apt <span class="text-white/40">(optional)</span></label>
+          <input id="bizSuite" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Suite 200"></div>
+        <div><label class="text-sm text-white/70">City</label>
+          <input id="bizCity" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Miami"></div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div><label class="text-sm text-white/70">State</label>
+          <input id="bizState" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="FL"></div>
+        <div><label class="text-sm text-white/70">ZIP code</label>
+          <input id="bizZip" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="33101"></div>
       </div>
       <div><label class="text-sm text-white/70">Business hours</label>
         <input id="bizHours" class="w-full mt-1 bg-white/5 border border-white/15 rounded-xl px-4 py-3" placeholder="Mon–Fri, 9am–6pm"></div>
@@ -389,10 +399,12 @@ Always confirm the caller's name and number before ending the call.</textarea>
   function gatherConfig(){
     const v=id=>{const e=document.getElementById(id);return e?e.value.trim():'';};
     const chk=id=>{const e=document.getElementById(id);return e?e.checked:false;};
+    const cityline=[v('bizCity'),[v('bizState'),v('bizZip')].filter(Boolean).join(' ')].filter(Boolean).join(', ');
+    const addr=[v('bizStreet'),v('bizSuite'),cityline].filter(Boolean).join(', ');
     return {category:selectedCat, agent_name:'Vocari',
       language:v('bizLang')||'en',
       owner_name:v('ownerName'), owner_email:v('ownerEmail'),
-      name:v('bizName')||'My Test Business', address:v('bizAddress'),
+      name:v('bizName')||'My Test Business', address:addr,
       hours:v('bizHours')||'Mon–Fri 9am–6pm', voice:selectedVoice||'Savannah',
       transfer_number:v('bizTransfer'), website:v('bizWebsite'),
       services:parseServices(v('bizServices')),
